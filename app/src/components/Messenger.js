@@ -4,18 +4,20 @@ import classNames from 'classnames'
 import {OrderedMap} from 'immutable'
 import {ObjectID} from '../helpers/objectId'
 import _ from 'lodash'
-
-
+import SearchUser from './SearchUser'
+import moment from 'moment'
 export default class Messenger extends Component {
     state = {
         height: window.innerHeight,
-        newMessage:''
+        newMessage:'',
+        searchUser:''
     }
 
     componentDidMount(){
         window.addEventListener('resize', this._onResize.bind(this))
         this.addMessage()
         this.addChannel()
+
     }
 
     componentWillUnmount(){
@@ -24,6 +26,7 @@ export default class Messenger extends Component {
     componentDidUpdate(){
         console.log('component did update')
         this.scrollMessageToBottom()
+        if(this.searchInput) this.searchInput.focus()
     }
     _onCreateChannerl(){
         const {store} = this.props;
@@ -33,14 +36,13 @@ export default class Messenger extends Component {
                 title:`Channel`,
                 lastMessage:`hey`,
                 avatar,
-                members:new OrderedMap({
-                    '1':true,
-                    '2':true,
-                    '3':true,
-                }),
+                members:new OrderedMap(),
                 messages:new OrderedMap(),
+                created:Date.now(),
+                isNew:true,
             }
         store.onCreateNewChannel(channel)
+        store.setActiveChannelId(channelId)
     }
     _onResize(){
         this.setState({
@@ -63,6 +65,7 @@ export default class Messenger extends Component {
                     '3':true,
                 }),
                 messages:new OrderedMap(),
+                created: Date.now(),
             }
             newChannel.messages = newChannel.messages.set(`${i}`,true);
             newChannel.messages = newChannel.messages.set(`${i+4}`,true);
@@ -132,6 +135,7 @@ export default class Messenger extends Component {
         if(this.messagesRef) 
         {this.messagesRef.scrollTop = this.messagesRef.scrollHeight}
     }
+
     render(){
         const {store} = this.props;
         const {height} = this.state;
@@ -183,14 +187,14 @@ export default class Messenger extends Component {
             </div>
         ))
 
-        const membersList = members.map((member) => (
+        let membersList = members.map((member) => (
             <div className='member' key={member._id}>
                 <div className='member-avatar'>
-                    <img src={avatar} alt=''/>
+                    <img src={member.avatar} alt=''/>
                 </div>
                 <div className='member-info'>
                     <h2>{member.name}</h2>
-                    <p>{member.created.toTimeString()}</p>
+                    <p>joined:{moment(member.created).fromNow()}</p>
                 </div>
             </div>
         ))
@@ -208,9 +212,28 @@ export default class Messenger extends Component {
                             <button>Messenger</button>
                         </div>
                     </div>
-                    <div className='content'>
-                        <h2>{_.get(activeChannel,'title')}</h2>
-                    </div>
+                    
+                       {_.get(activeChannel,'isNew')?
+                       (<div className='content'>
+                           <div className="toolbar">
+                            <h2>{_.get(activeChannel,'title')}</h2>
+                            <input type='text'
+                                   value={this.state.searchUser}
+                                   onChange={(e)=>{
+                                this.setState({
+                                    searchUser: _.get(e,'target.value')
+                                })
+                            }}
+                                    ref={(input)=>this.searchInput = input}
+                            />
+                            </div>
+                            <SearchUser search={this.state.searchUser} store={store}/>
+                        </div>
+                    ):
+                        (<div className='content'>
+                            <h2>{_.get(activeChannel,'title')}</h2>
+                         </div>)
+                    }
                     <div className='right'>
                         <div className='user-bar'>
                             <div className='name'>
@@ -257,10 +280,16 @@ export default class Messenger extends Component {
                         </div>
                     </div>
                     <div className='sidebar-right'>
-                        <div className='title'>PEOPLE</div>
-                        <div className='members'>
-                            {membersList}
-                        </div>
+                        {members.length?(
+                            <div>
+                                <div className='title'>PEOPLE</div>
+                                <div className='members'>
+                                    {membersList}
+                                </div>
+                            </div>):
+                        null
+                        }
+                        
                     </div>
                 </div>
             </div>

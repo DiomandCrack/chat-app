@@ -1,4 +1,5 @@
 import { OrderedMap } from 'immutable';
+import escapeRegExp from 'escape-string-regexp';
 import _ from 'lodash';
 
 const users = OrderedMap({
@@ -82,10 +83,28 @@ export default class Store {
     }
 
     getChannels() {
+
+        // need sort channels by created
+        this.channels = this.channels.sort((a, b) => b.created - a.created)
         return this.channels.valueSeq();
     }
 
     update() {
         this.app.forceUpdate();
+    }
+
+    searchUsers(search = '') {
+        let searchItems = new OrderedMap();
+        if (search.length) {
+            //match search list
+            users.filter((user) => {
+                const name = _.get(user, 'name')
+                const userId = _.get(user, '_id')
+                if (_.includes(name, search)) {
+                    searchItems = searchItems.set(userId, user)
+                }
+            })
+        }
+        return searchItems.valueSeq();
     }
 }
