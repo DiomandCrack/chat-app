@@ -10,8 +10,29 @@
         color: $header-font-color;
         .left {
             width: $left-sidebar-width;
+            position: relative;
+            button {
+                outline: none;
+                background: none;
+                border: none;
+                color: #ffffff;
+                height: $header-height;
+                font-size: 1.5rem;
+            }
+            .left-action,
+            .right-action {
+                position: absolute;
+                top: 2px;
+            }
+            .left-action {
+                left: 0;
+            }
+            .right-action {
+                right: 0;
+            }
             .actions {
-                padding: 0 10px
+                padding: 0 10px;
+                text-align: center;
             }
         }
         .content {

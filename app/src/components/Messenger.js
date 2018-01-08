@@ -23,6 +23,24 @@ export default class Messenger extends Component {
     }
     componentDidUpdate(){
         console.log('component did update')
+        this.scrollMessageToBottom()
+    }
+    _onCreateChannerl(){
+        const {store} = this.props;
+        const channelId = ObjectID().toString()
+        const channel = {
+                _id: channelId,
+                title:`Channel`,
+                lastMessage:`hey`,
+                avatar,
+                members:new OrderedMap({
+                    '1':true,
+                    '2':true,
+                    '3':true,
+                }),
+                messages:new OrderedMap(),
+            }
+        store.onCreateNewChannel(channel)
     }
     _onResize(){
         this.setState({
@@ -105,9 +123,14 @@ export default class Messenger extends Component {
     renderMessage(message){
         const text = _.get(message,'main','')
         const html = _.split(text,'\n').map((item,i)=>(
-            <p dangerouslySetInnerHTML={{__html:item}}/>)
+            <div dangerouslySetInnerHTML={{__html:item}} key={i} />)
         )
         return html
+    }
+
+    scrollMessageToBottom(){
+        if(this.messagesRef) 
+        {this.messagesRef.scrollTop = this.messagesRef.scrollHeight}
     }
     render(){
         const {store} = this.props;
@@ -125,7 +148,7 @@ export default class Messenger extends Component {
 
         // console.log(messages,channels);
         const messagesList=messages.map((message,i) => (
-            <div className={classNames('message',{'me':message.me})} key={i} ref={(ref)=>this.messagesRef = ref}>
+            <div className={classNames('message',{'me':message.me})} key={i}>
                 <div className='avatar'>
                     <img src={message.avatar} alt=""/>
                 </div>
@@ -137,9 +160,9 @@ export default class Messenger extends Component {
                         <time className='send-time'>{message.time}</time>
                     </div>
                     <div className='message-text'>
-                        <p>
+                        <div>
                             {this.renderMessage(message)}
-                        </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -175,8 +198,14 @@ export default class Messenger extends Component {
             <div style={style} className='messenger'>
                 <div className='header'>
                     <div className='left'>
+                    <button className='left-action'>
+                        <i className='icon-cog'/>
+                    </button>
+                    <button className='right-action' onClick={this._onCreateChannerl.bind(this)}>
+                        <i className='icon-pencil-square-o'/>
+                    </button>
                         <div className='actions'>
-                            <button>New message</button>
+                            <button>Messenger</button>
                         </div>
                     </div>
                     <div className='content'>
@@ -202,7 +231,7 @@ export default class Messenger extends Component {
 
                     </div>
                     <div className='content'>
-                        <div className='messages-list'>
+                        <div className='messages-list' ref={(ref)=>this.messagesRef = ref}>
                         {messagesList}
                         </div>
                         <div className='messenger-input'>

@@ -2,9 +2,9 @@ import { OrderedMap } from 'immutable';
 import _ from 'lodash';
 
 const users = OrderedMap({
-    '1': { _id: '1', name: 'Diamond', created: new Date() },
-    '2': { _id: '2', name: 'abc', created: new Date() },
-    '3': { _id: '3', name: 'K', created: new Date() }
+    '1': { _id: '1', name: 'Diamond', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@1.png' },
+    '2': { _id: '2', name: 'abc', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@2.png' },
+    '3': { _id: '3', name: 'K', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@3.png' }
 })
 
 export default class Store {
@@ -36,6 +36,12 @@ export default class Store {
             })
         }
         return members
+    }
+
+    onCreateNewChannel(channel = {}) {
+        console.log(channel);
+        const channelId = _.get(channel, '_id')
+        this.addChannel(channelId, channel)
     }
 
     setActiveChannelId(id) {
