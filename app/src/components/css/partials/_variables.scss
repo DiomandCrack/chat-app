@@ -1,0 +1,20 @@
+//color theme---------
+$primary-color: #03A9F4;
+$danger-color: #FF3D00;
+$body-font-color:#37474F;
+//header-------------
+$header-height: 50px;
+$header-background-color:linear-gradient(to right, blueviolet, $danger-color);
+;
+$header-font-color:#E1F5FE;
+//sidebar-------------
+$left-sidebar-width:200px;
+$right-sidebar-width:300px;
+//border--------------
+$border-color: rgba(0, 0, 0, 0.05);
+//messages-list-------------
+$messages-list-background-color: #EEEEEE;
+//message-------------
+$message-background-color:#ffffff;
+$message-author-color:#757575;
+$message-time-color:#bdbdbd;
