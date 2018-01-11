@@ -135,11 +135,22 @@
                             width: 200px;
                         }
                     }
+                    .form-actions {
+                        display: flex;
+                        justify-content: center
+                    }
                     button {
                         color: #fff;
+                        padding: 0 10px;
+                        margin: 20px 5px;
                     }
                     p {
                         color: $danger-color;
+                    }
+                    .space {
+                        height: 30px;
+                        width: 100%;
+                        margin: 1rem;
                     }
                 }
             }

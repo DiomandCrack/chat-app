@@ -3,12 +3,23 @@ import _ from 'lodash'
 import defaultAvatar from './files/img/avatar.png'
 import UserForm from './UserForm'
 
+
 export default class UserBar extends Component {
+state={
+    showLoginForm:false
+}
+handleShowLoginForm=(e,isShown)=>{
+    console.log('login form',e.target)
+    this.setState({
+        showLoginForm:isShown
+    })
+}
 render(){
     const {store} = this.props;
     const me = store.getCurrentUser()
     // console.log(me)
     const avatar = _.get(me,'avatar')
+    const {showLoginForm} = this.state
     return(
 
         <div className='user-bar'>
@@ -24,9 +35,13 @@ render(){
                 </div>
             ):
             (
-                <button type='button' className="login-btn">Sign In</button>
+                <button 
+                    type='button' 
+                    className="login-btn"
+                    onClick={(e)=>this.handleShowLoginForm(e,true)}>Sign In</button>
             )}
-            <UserForm store={store}/>
+            {!me && showLoginForm ?<UserForm store={store} onShowLoginForm={this.handleShowLoginForm}/>:null}
+            
         </div>
 
 

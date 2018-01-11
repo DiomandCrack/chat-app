@@ -10,15 +10,31 @@ export default class UserForm extends Component {
             password:'',
         }
     }
+    onClickOutside=(e)=>{
+        if(this.form && !this.form.contains(e.target)){
+            // console.log('mouse is outside')
+            this.props.onShowLoginForm(e,false)
+        }
+    }
+    componentDidMount(){
+        window.addEventListener('mousedown',this.onClickOutside)
+    }
+    componentWillUnmount(){
+        window.removeEventListener('mousedown',this.onClickOutside)
+    }
     handleOnSubmit=(e)=>{
         e.preventDefault()
         const {store} = this.props
         const {user} = this.state
         const email=_.get(user,'email')
         const password = _.get(user,'password')
-        if( email && password){
+        this.setState({
+            message:null
+        },()=>{
+            if( email && password){
             store.login(email,password).then((user)=>{
                 console.log(user)
+
             }).catch(err=>{
                 console.log(err)
                 this.setState({
@@ -29,6 +45,8 @@ export default class UserForm extends Component {
                 })
             })
         }
+        })
+     
         console.log('submitted user',user)
     }
 
@@ -45,11 +63,13 @@ export default class UserForm extends Component {
         const {message}=this.state
         const {user} = this.state
         return(
-            <div className='user-form'>
+            <div className='user-form' ref={(form)=>{
+                this.form = form
+            }}>
                 <form onSubmit={this.handleOnSubmit} method = 'post'>
                 {message?<p className={classNames('login-message',
                             _.get(message,'type')
-                        )}>{_.get(message,'main')}</p>:null}
+                        )}>{_.get(message,'main')}</p>:<div className='space'></div>}
                     <div className='form-item'>
                         <label htmlFor="emlai">Email</label>
                         <input 

@@ -15,12 +15,12 @@ export default class Store {
         this.activeChannelId = null;
 
         this.user = {
-                _id: '1',
-                name: 'Diamond',
-                avatar: 'https://api.adorable.io/avatars/100/abott@1.png',
-                created: new Date(),
-            }
-            // this.user = null
+            _id: '1',
+            name: 'Diamond',
+            avatar: 'https://api.adorable.io/avatars/100/abott@1.png',
+            created: new Date(),
+        }
+        this.user = this.getUserFromLocalStorage();
     }
     getCurrentUser() {
         return this.user
@@ -130,19 +130,41 @@ export default class Store {
         return searchItems.valueSeq();
     }
     removeMemberFromChannel(channel = null, user = null) {
-        if (!channel || !user) {
-            return;
+            if (!channel || !user) {
+                return;
+            }
+            const userId = _.get(user, '_id')
+            const channelId = _.get(channel, '_id')
+            channel.members = channel.members.remove(userId)
+            this.channels = this.channels.set(channelId, channel)
+            this.update()
         }
-        const userId = _.get(user, '_id')
-        const channelId = _.get(channel, '_id')
-        channel.members = channel.members.remove(userId)
-        this.channels = this.channels.set(channelId, channel)
-        this.update()
+    //login/logout-------------------------------------------
+    setCurrentUser(user) {
+        this.user = user;
+        localStorage.setItem('chatAppMe',JSON.stringify(user))
+        this.update();
+    }
+    getUserFromLocalStorage(){
+        let user=null;
+        const data = localStorage.getItem('chatAppMe')
+        console.log('localData',data)
+        try{
+            user = JSON.parse(data)
+        }catch(err){
+            console.log(err)
+        }
+        return user
     }
     login(email, password) {
         const userEmail = _.toLower(email)
+        const _this = this
         return new Promise((resolve, reject) => {
             const user = users.find((user) => _.get(user, 'email') === userEmail)
+
+            if (user) {
+                _this.setCurrentUser(user)
+            }
             console.log('email: ', email, 'password: ', password, 'user: ', user)
             return user ? resolve(user) : reject('user not found')
                 /*     if (user) {

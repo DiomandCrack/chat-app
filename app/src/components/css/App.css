@@ -368,10 +368,19 @@ html {
             .messenger .header .right .user-bar .user-form .form-item input {
               height: 30px;
               width: 200px; }
+          .messenger .header .right .user-bar .user-form .form-actions {
+            display: flex;
+            justify-content: center; }
           .messenger .header .right .user-bar .user-form button {
-            color: #fff; }
+            color: #fff;
+            padding: 0 10px;
+            margin: 20px 5px; }
           .messenger .header .right .user-bar .user-form p {
             color: #FF3D00; }
+          .messenger .header .right .user-bar .user-form .space {
+            height: 30px;
+            width: 100%;
+            margin: 1rem; }
   .messenger .main {
     display: flex;
     overflow-y: hidden;
