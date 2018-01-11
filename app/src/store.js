@@ -14,12 +14,6 @@ export default class Store {
         this.channels = new OrderedMap();
         this.activeChannelId = null;
 
-        this.user = {
-            _id: '1',
-            name: 'Diamond',
-            avatar: 'https://api.adorable.io/avatars/100/abott@1.png',
-            created: new Date(),
-        }
         this.user = this.getUserFromLocalStorage();
     }
     getCurrentUser() {
@@ -139,20 +133,18 @@ export default class Store {
             this.channels = this.channels.set(channelId, channel)
             this.update()
         }
-    //login/logout-------------------------------------------
+        //login/logout-------------------------------------------
     setCurrentUser(user) {
         this.user = user;
-        localStorage.setItem('chatAppMe',JSON.stringify(user))
+        localStorage.setItem('chatAppMe', JSON.stringify(user))
         this.update();
     }
-    getUserFromLocalStorage(){
-        let user=null;
+    getUserFromLocalStorage() {
+        let user = null;
         const data = localStorage.getItem('chatAppMe')
-        console.log('localData',data)
-        try{
+        console.log('localData', data)
+        if (data) {
             user = JSON.parse(data)
-        }catch(err){
-            console.log(err)
         }
         return user
     }
@@ -162,8 +154,13 @@ export default class Store {
         return new Promise((resolve, reject) => {
             const user = users.find((user) => _.get(user, 'email') === userEmail)
 
-            if (user) {
+            /*             if (user) {
+                            _this.setCurrentUser(user)
+                        } */
+            try {
                 _this.setCurrentUser(user)
+            } catch (err) {
+                console.log(err)
             }
             console.log('email: ', email, 'password: ', password, 'user: ', user)
             return user ? resolve(user) : reject('user not found')
@@ -173,6 +170,10 @@ export default class Store {
                         return reject('user not found')
                     } */
         })
-
+    }
+    signOut() {
+        this.user = null;
+        localStorage.removeItem('chatAppMe')
+        this.update();
     }
 }

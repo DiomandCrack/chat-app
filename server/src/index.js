@@ -5,7 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const webSocketServer = require('uws').Server;
 
-const PORT = 3000;
+const PORT = 3001;
 const app = express();
 app.server = http.createServer(app);
 
@@ -20,7 +20,7 @@ app.use(bodyParser.json({
 }))
 
 
-app.wss = new webSocketServer({
+/* app.wss = new webSocketServer({
     server: app.server
 })
 
@@ -70,7 +70,7 @@ setInterval(() => {
             client.ws.send(msg)
         });
     }
-}, 3000)
+}, 3000) */
 
 app.server.listen(process.env.PORT || PORT, () => {
     console.log(`App is running on port ${app.server.address().port}`);

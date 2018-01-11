@@ -29,12 +29,16 @@ export default class UserForm extends Component {
         const email=_.get(user,'email')
         const password = _.get(user,'password')
         this.setState({
-            message:null
+            message:null,
         },()=>{
             if( email && password){
             store.login(email,password).then((user)=>{
-                console.log(user)
-
+                this.setState({
+                    message:null,
+                })
+                if(this.props.onShowLoginForm){
+                    this.props.onShowLoginForm(e,false)
+                }
             }).catch(err=>{
                 console.log(err)
                 this.setState({
