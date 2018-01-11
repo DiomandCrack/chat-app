@@ -349,14 +349,18 @@ html {
           line-height: 30px;
           height: 30px;
           margin: 10px 10px;
-          border-radius: 15px; }
+          border-radius: 15px;
+          outline: none; }
         .messenger .header .right .user-bar .user-form {
+          color: #37474F;
           width: 350px;
           line-height: 30px;
           position: absolute;
           right: 0px;
           padding: 0 25px;
-          background: #FF3D00; }
+          background: #fff;
+          border: 2px solid #FF3D00;
+          border-radius: 8px; }
           .messenger .header .right .user-bar .user-form .form-item {
             display: flex;
             justify-content: space-between;
@@ -364,6 +368,10 @@ html {
             .messenger .header .right .user-bar .user-form .form-item input {
               height: 30px;
               width: 200px; }
+          .messenger .header .right .user-bar .user-form button {
+            color: #fff; }
+          .messenger .header .right .user-bar .user-form p {
+            color: #FF3D00; }
   .messenger .main {
     display: flex;
     overflow-y: hidden;

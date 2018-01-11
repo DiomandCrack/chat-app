@@ -141,8 +141,16 @@ export default class Store {
     }
     login(email, password) {
         const userEmail = _.toLower(email)
-        const user = users.find((user) => _.get(user, 'email') === userEmail)
-        console.log('email: ', email, 'password: ', password, 'user: ', user)
-        return user;
+        return new Promise((resolve, reject) => {
+            const user = users.find((user) => _.get(user, 'email') === userEmail)
+            console.log('email: ', email, 'password: ', password, 'user: ', user)
+            return user ? resolve(user) : reject('user not found')
+                /*     if (user) {
+                        return resolve(user)
+                    } else {
+                        return reject('user not found')
+                    } */
+        })
+
     }
 }

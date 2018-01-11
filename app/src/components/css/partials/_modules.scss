@@ -114,14 +114,18 @@
                     height: 30px;
                     margin: 10px 10px;
                     border-radius: 15px;
+                    outline: none;
                 }
                 .user-form {
+                    color: $body-font-color;
                     width: 350px;
                     line-height: 30px;
                     position: absolute;
                     right: 0px;
                     padding: 0 25px;
-                    background: $danger-color;
+                    background: #fff;
+                    border: 2px solid $danger-color;
+                    border-radius: 8px;
                     .form-item {
                         display: flex;
                         justify-content: space-between;
@@ -130,6 +134,12 @@
                             height: 30px;
                             width: 200px;
                         }
+                    }
+                    button {
+                        color: #fff;
+                    }
+                    p {
+                        color: $danger-color;
                     }
                 }
             }

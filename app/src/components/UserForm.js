@@ -1,8 +1,10 @@
 import React,{Component} from 'react'
 import _ from 'lodash'
+import classNames from 'classnames'
 
 export default class UserForm extends Component {
     state={
+        message:null,
         user:{
             email:'',
             password:'',
@@ -15,7 +17,17 @@ export default class UserForm extends Component {
         const email=_.get(user,'email')
         const password = _.get(user,'password')
         if( email && password){
-            store.login(email,password)
+            store.login(email,password).then((user)=>{
+                console.log(user)
+            }).catch(err=>{
+                console.log(err)
+                this.setState({
+                    message:{
+                        main:err,
+                        type:'error'
+                    }
+                })
+            })
         }
         console.log('submitted user',user)
     }
@@ -30,10 +42,14 @@ export default class UserForm extends Component {
     }
 
     render(){
+        const {message}=this.state
         const {user} = this.state
         return(
             <div className='user-form'>
                 <form onSubmit={this.handleOnSubmit} method = 'post'>
+                {message?<p className={classNames('login-message',
+                            _.get(message,'type')
+                        )}>{_.get(message,'main')}</p>:null}
                     <div className='form-item'>
                         <label htmlFor="emlai">Email</label>
                         <input 
