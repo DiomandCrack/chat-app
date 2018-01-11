@@ -1,22 +1,25 @@
 import React, {Component} from 'react'
+import moment from 'moment'
 import avatar from './files/img/avatar.png'
 import classNames from 'classnames'
 import {OrderedMap} from 'immutable'
 import {ObjectID} from '../helpers/objectId'
 import _ from 'lodash'
 import SearchUser from './SearchUser'
-import moment from 'moment'
+import UserBar from './UserBar'
+
 export default class Messenger extends Component {
     state = {
         height: window.innerHeight,
         newMessage:'',
-        searchUser:''
+        searchUser:'',
+        showSearchUser:'false',
     }
 
     componentDidMount(){
         window.addEventListener('resize', this._onResize.bind(this))
         this.addMessage()
-        this.addChannel()
+        // this.addChannel()
 
     }
 
@@ -26,55 +29,80 @@ export default class Messenger extends Component {
     componentDidUpdate(){
         console.log('component did update')
         this.scrollMessageToBottom()
-        if(this.searchInput) this.searchInput.focus()
+
     }
-    _onCreateChannerl(){
+    _onCreateChannel=()=>{
         const {store} = this.props;
+
+        const currentUser = store.getCurrentUser();
+        const currentUserId = _.get(currentUser,'_id')
+
         const channelId = ObjectID().toString()
         const channel = {
                 _id: channelId,
-                title:`Channel`,
-                lastMessage:`hey`,
+                title:``,
+                lastMessage:``,
                 avatar,
                 members:new OrderedMap(),
                 messages:new OrderedMap(),
                 created:Date.now(),
+                userId:currentUserId,
                 isNew:true,
             }
+        channel.members = channel.members.set(currentUserId,true)
         store.onCreateNewChannel(channel)
         store.setActiveChannelId(channelId)
     }
-    _onResize(){
+    _onResize=()=>{
         this.setState({
             height:window.innerHeight
         })
     }
+    // addChannel(){
+    //     const {store} = this.props
+    //             //create test channel
+    //     for(let i=0; i<10; i++){
+    //         let newChannel = {
+    //             _id: `${i}`,
+    //             title:`Channel title ${i}`,
+    //             lastMessage:`hey there...${i}`,
+    //             avatar,
+    //             members:new OrderedMap({
+    //                 '1':true,
+    //                 '2':true,
+    //                 '3':true,
+    //             }),
+    //             messages:new OrderedMap(),
+    //             created: Date.now(),
+    //         }
+    //         newChannel.messages = newChannel.messages.set(`${i}`,true);
+    //         newChannel.messages = newChannel.messages.set(`${i+4}`,true);
+    //         newChannel.messages = newChannel.messages.set(`${i+3}`,true);
+    //         store.addChannel(i,newChannel)
+    //     }
 
-    addChannel(){
-        const {store} = this.props
-                //create test channel
-        for(let i=0; i<10; i++){
-            let newChannel = {
-                _id: `${i}`,
-                title:`Channel title ${i}`,
-                lastMessage:`hey there...${i}`,
-                avatar,
-                members:new OrderedMap({
-                    '1':true,
-                    '2':true,
-                    '3':true,
-                }),
-                messages:new OrderedMap(),
-                created: Date.now(),
-            }
-            newChannel.messages = newChannel.messages.set(`${i}`,true);
-            newChannel.messages = newChannel.messages.set(`${i+4}`,true);
-            newChannel.messages = newChannel.messages.set(`${i+3}`,true);
-            store.addChannel(i,newChannel)
+    // }
+    renderChannelTitle=(channel=null)=>{
+        if(!channel){
+            return null;
         }
-
+        const {store} = this.props;
+        const members = store.getMembersFromChannel(channel);
+        // const me = store.getCurrentUser();
+        
+        const names = [];
+        members.forEach((member,i)=>{
+            names.push(_.get(member,'name'))
+        })
+        console.log(members,names)
+        const title = _.join(names,',')
+        if(!title && _.get(channel,'isNew')){
+            return 'new channel'
+        }else{
+            return title;
+        }
     }
-    addMessage(){
+    addMessage=()=>{
         const {store} = this.props
 
         //create test messages
@@ -97,7 +125,7 @@ export default class Messenger extends Component {
         console.log(store);
 
     }
-    handleSend(){
+    handleSend=()=>{
         const {newMessage} = this.state
         const {store} = this.props
         //creat new message
@@ -111,7 +139,7 @@ export default class Messenger extends Component {
             main:newMessage,
             author: _.get(currentUser,'name',null),
             me: true,
-            avatar,
+            userId:_.get(currentUser,'_id'),
             channelId,
             time: new Date().toTimeString().substr(0,8)
         };
@@ -123,7 +151,7 @@ export default class Messenger extends Component {
         })
     }
 
-    renderMessage(message){
+    renderMessage=(message)=>{
         const text = _.get(message,'main','')
         const html = _.split(text,'\n').map((item,i)=>(
             <div dangerouslySetInnerHTML={{__html:item}} key={i} />)
@@ -131,7 +159,7 @@ export default class Messenger extends Component {
         return html
     }
 
-    scrollMessageToBottom(){
+    scrollMessageToBottom=()=>{
         if(this.messagesRef) 
         {this.messagesRef.scrollTop = this.messagesRef.scrollHeight}
     }
@@ -148,18 +176,18 @@ export default class Messenger extends Component {
         const channels = store.getChannels()
         const members = store.getMembersFromChannel(activeChannel)
         
-        console.log('activeChannel ',activeChannel)
+        // console.log('activeChannel ',activeChannel)
 
         // console.log(messages,channels);
         const messagesList=messages.map((message,i) => (
             <div className={classNames('message',{'me':message.me})} key={i}>
                 <div className='avatar'>
-                    <img src={message.avatar} alt=""/>
+                    <img src={_.get(_.get(message,'user'),'avatar')} alt=""/>
                 </div>
                 <div className='message-main'>
                     <div className='message-info'>
                         <div className='message-author'>
-                            {message.author}
+                            {_.get(message,'me')?'我':_.get(_.get(message,'user'),'name')}
                         </div>
                         <time className='send-time'>{message.time}</time>
                     </div>
@@ -181,7 +209,7 @@ export default class Messenger extends Component {
                     <img src={channel.avatar} alt=''/>
                 </div>
                 <div className='channel-info'>
-                    <h2>{channel.title}</h2>
+                    <h2>{this.renderChannelTitle(channel)}</h2>
                     <p>{channel.lastMessage}</p>
                 </div>
             </div>
@@ -205,7 +233,7 @@ export default class Messenger extends Component {
                     <button className='left-action'>
                         <i className='icon-cog'/>
                     </button>
-                    <button className='right-action' onClick={this._onCreateChannerl.bind(this)}>
+                    <button className='right-action' onClick={this._onCreateChannel}>
                         <i className='icon-pencil-square-o'/>
                     </button>
                         <div className='actions'>
@@ -217,32 +245,51 @@ export default class Messenger extends Component {
                        (<div className='content'>
                            <div className="toolbar">
                             <h2>{_.get(activeChannel,'title')}</h2>
-                            <input type='text'
-                                   value={this.state.searchUser}
-                                   onChange={(e)=>{
-                                this.setState({
-                                    searchUser: _.get(e,'target.value')
-                                })
-                            }}
-                                    ref={(input)=>this.searchInput = input}
-                            />
+                            <div>
+                                <label htmlFor="searchMember">To:</label>
+                                {
+                                    members.map((user,key)=>(
+                                        <span onClick={
+                                            ()=>store.removeMemberFromChannel(activeChannel,user)
+                                        } key={key}>{user.name}</span>))
+                                }
+                                <input type='text'
+                                    id='searchMember'
+                                    name='searchMember'
+                                    value={this.state.searchUser}
+                                    onChange={(e)=>{
+                                    this.setState({
+                                        searchUser: _.get(e,'target.value'),
+                                        showSearchUser:true,
+                                    })
+                                }}
+                                        ref={(input)=>this.searchInput = input}
+                                />
+                                </div>
                             </div>
-                            <SearchUser search={this.state.searchUser} store={store}/>
+                            {this.state.showSearchUser? <SearchUser
+                            onSelect={(user)=>{
+                                
+                                this.setState({
+                                    showSearchUser:false,
+                                    searchUser:'',
+                                },()=>{
+                                    const userId = _.get(user,'_id')
+                                    const channelId =_.get(activeChannel,'_id')
+                                    store.addUserToChannel(channelId,userId)
+                                })
+                            }} 
+                            search={this.state.searchUser} 
+                            store={store}/>:null}
+                           
                         </div>
                     ):
                         (<div className='content'>
-                            <h2>{_.get(activeChannel,'title')}</h2>
+                            <h2>{this.renderChannelTitle(activeChannel)}</h2>
                          </div>)
                     }
                     <div className='right'>
-                        <div className='user-bar'>
-                            <div className='name'>
-                                DiamondCrack
-                            </div>
-                            <div className='avatar'>
-                                <img src={avatar} alt=""/>
-                            </div>
-                        </div>
+                        <UserBar store={store}/>
                     </div>
                 </div>
                 <div className='main'>
@@ -257,7 +304,7 @@ export default class Messenger extends Component {
                         <div className='messages-list' ref={(ref)=>this.messagesRef = ref}>
                         {messagesList}
                         </div>
-                        <div className='messenger-input'>
+                        {activeChannel && members.size>0 ?<div className='messenger-input'>
                             <div className='text-input'>
                                 <textarea 
                                     name="" 
@@ -275,12 +322,13 @@ export default class Messenger extends Component {
                                     ></textarea>
                             </div>
                             <div className='actions'>
-                                <button className='send' onClick={this.handleSend.bind(this)}>Send</button>
+                                <button className='send' onClick={this.handleSend}>Send</button>
                             </div>
-                        </div>
+                        </div>:null}
+                        
                     </div>
                     <div className='sidebar-right'>
-                        {members.length?(
+                        {members.size?(
                             <div>
                                 <div className='title'>PEOPLE</div>
                                 <div className='members'>
