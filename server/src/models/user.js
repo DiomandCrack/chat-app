@@ -49,14 +49,32 @@ class User {
         const password = _.get(user, 'password', '');
         return new Promise((resolve, reject) => {
             if (!password || !email || !isEmail(email)) {
-                return reject({ message: 'An error login' })
+                return reject({ message: 'login error' })
             }
+
             //find in database with email
-            this.findUserByEmail(email, (err, user) => {
-                return err ? reject({ message: 'login error' }) : resolve(user)
+            this.findUserByEmail(email, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                const hashPassword = _.get(result, 'password');
+                const isMatch = bcrypt.compareSync(password, hashPassword);
+                // return isMatch ? resolve(result) : reject({ message: 'login error' })
+                if (!isMatch) {
+                    return reject({ message: 'login error' })
+                }
+                //user login successfully creat new token to token collection.
+                const userId = _.get(result, '_id')
+                this.app.models.token.create(userId).then((token) => {
+                    token.user = result
+                    return resolve(token);
+                }).catch(() => {
+                    return reject({ message: 'login error' })
+                })
             })
         })
     }
+
     findUserByEmail(email, cb = () => {}) {
         this.app.db.collection('users').findOne({ email }, (err, user) => {
             if (err || !user) {

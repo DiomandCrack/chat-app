@@ -60,6 +60,7 @@ class AppRouter {
             const body = _.get(req, 'body');
             app.models.user.login(body).then((token) => {
                 console.log("successful login user.", token)
+                _.unset(token, 'user.password')
                 return res.status(200).json(token);
             }).catch(err => {
                 return res.status(401).json({
