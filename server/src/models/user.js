@@ -1,39 +1,71 @@
 const _ = require('lodash');
 const isEmail = require('../helper').isEmail;
+const ObjectID = require('mongodb').ObjectID;
+const OrderedMap = require('immutable').OrderedMap;
 //decode
 const bcrypt = require('bcrypt');
 const saltRound = 10;
 class User {
     constructor(app) {
         this.app = app;
+        this.users = new OrderedMap();
     }
 
-    // load(id) {
-    //     return new Promise((resolve, reject) => {
+    load(id) {
 
-    //         this.findUserById(id, (err, user) => {
-    //             if (!err && user) {
-    //                 const users = this.users.set(id, user);
-    //             }
-    //             return err ? reject(err) : resolve(user)
-    //         });
+        return new Promise((resolve, reject) => {
+            //find in cache if found return and needn't to query db
+            const userInCache = this.users.get(id);
+            if (userInCache) {
+                return resolve(userInCache)
+            }
+            this.findUserById(id).then(
+                (user) => {
+                    this.users = this.users.set(id, user);
+                    return resolve(user);
+                }
+            ).catch(
+                () => {
+                    return reject({ message: 'user not found' });
+                    // return reject('user not found');
+                }
+            )
 
-    //     });
-    // }
-
-    // findUserById(id, cb = () => {}) {
-    //     if (!id) {
-    //         return cb({ message: "user not found" }, null)
-    //     }
-    //     const userId = new ObjectID(id);
-    //     this.app.db.collection('users').findOne({ _id: userId }, (err, result) => {
-    //         if (err || !result) {
-    //             return cb({ message: 'User not found' })
-    //         }
-    //         return cb(null, result)
-    //     })
-    // }
-
+        })
+    }
+    findUserById(id) {
+        return new Promise((resolve, reject) => {
+            if (!id) {
+                return reject({ message: 'user not found' });
+            }
+            const userId = new ObjectID(id);
+            this.app.db.collection('users').findOne({ _id: userId }, (err, user) => {
+                return err ? reject({ message: "user not found" }) : resolve(user)
+            })
+        })
+    }
+    login(user) {
+        const email = _.get(user, 'email', '');
+        const password = _.get(user, 'password', '');
+        return new Promise((resolve, reject) => {
+            if (!password || !email || !isEmail(email)) {
+                return reject({ message: 'An error login' })
+            }
+            //find in database with email
+            this.findUserByEmail(email, (err, user) => {
+                return err ? reject({ message: 'login error' }) : resolve(user)
+            })
+        })
+    }
+    findUserByEmail(email, cb = () => {}) {
+        this.app.db.collection('users').findOne({ email }, (err, user) => {
+            if (err || !user) {
+                return cb({ message: 'email not found' });
+            }
+            //if found user we have to compare password
+            return cb(null, user)
+        })
+    }
     beforeSave(user, cb = () => {}) {
         let errors = [];
         const fields = ['name', 'email', 'password'];
@@ -123,6 +155,8 @@ class User {
                     if (err) {
                         return reject({ message: 'An err saving user' })
                     }
+                    const userId = _.get(user, '_id').toString();
+                    this.users = this.users.set(userId, user);
                     //insert user to database
                     return resolve(user)
                 });
@@ -131,4 +165,4 @@ class User {
     }
 }
 
-module.exports = User
+module.exports = User;

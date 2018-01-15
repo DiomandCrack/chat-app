@@ -1,6 +1,5 @@
 const moment = require('moment');
 const _ = require('lodash');
-const ObjectID = require('Mongodb');
 const START_TIME = new Date();
 class AppRouter {
     constructor(app) {
@@ -44,6 +43,7 @@ class AppRouter {
         app.get('/api/users/:id', (req, res, next) => {
             const userId = _.get(req, 'params.id')
                 // return res.json({ hi: 'there' })
+
             app.models.user.load(userId).then((user) => {
                 _.unset(user, 'password')
                 return res.status(200).json(user);
@@ -51,6 +51,22 @@ class AppRouter {
                 return res.status(404).json({ err });
             })
         });
+        /*
+        @endpoint:/api/users/login
+        @method: post
+        login: email,password
+        */
+        app.post('/api/users/login', (req, res, next) => {
+            const body = _.get(req, 'body');
+            app.models.user.login(body).then((token) => {
+                console.log("successful login user.", token)
+                return res.status(200).json(token);
+            }).catch(err => {
+                return res.status(401).json({
+                    err
+                })
+            })
+        })
     }
 }
 
