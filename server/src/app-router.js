@@ -43,11 +43,18 @@ class AppRouter {
         app.get('/api/users/me', (req, res, next) => {
             let tokenId = req.get('authorization');
             if (!tokenId) {
-                tokenId = null;
+                //get token from query
+                tokenId = _.get(req, 'query.auth');
             }
-            return res.json({
-                accessTokenId: tokenId
+
+            app.models.token.load(tokenId).then((accessToken) => {
+                return res.json(accessToken)
+            }).catch((err) => {
+                return res.status(401).json({
+                    err
+                })
             })
+
         });
         /* 
         @endpoint: /api/users/:id

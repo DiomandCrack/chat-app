@@ -180,6 +180,10 @@ export default class Store {
         }catch(err){
             console.log(err);
         }
+        if(user){
+            //try to connect to backend server and verify this user is exist.
+            
+        }
         return user
     }
     login(email = null, password = null) {
