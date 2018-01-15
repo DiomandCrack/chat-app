@@ -33,9 +33,6 @@ export default class UserForm extends Component {
         },()=>{
             if( email && password){
             store.login(email,password).then((user)=>{
-                this.setState({
-                    message:null,
-                })
                 if(this.props.onShowLoginForm){
                     this.props.onShowLoginForm(e,false)
                 }

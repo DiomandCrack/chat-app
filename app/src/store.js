@@ -1,20 +1,42 @@
 import { OrderedMap } from 'immutable';
+import Service from './service'
 import _ from 'lodash';
-
-const users = OrderedMap({
-    '1': { _id: '1', email: 'zk05161219@gmail.com', name: 'Diamond', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@1.png' },
-    '2': { _id: '2', email: 'abc@gmail.com', name: 'abc', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@2.png' },
-    '3': { _id: '3', email: 'k@gmail.com', name: 'K', created: new Date(), avatar: 'https://api.adorable.io/avatars/100/abott@3.png' }
-})
 
 export default class Store {
     constructor(appComponent) {
         this.app = appComponent
+        this.service = new Service();
         this.messages = new OrderedMap();
         this.channels = new OrderedMap();
         this.activeChannelId = null;
 
+        this.token = this.getTokenFromLocalStorage();
         this.user = this.getUserFromLocalStorage();
+        this.users = new OrderedMap();
+        this.search = {
+            users: new OrderedMap(),
+        }
+    }
+    getTokenFromLocalStorage(){
+        let token;
+        const data = localStorage.getItem('token');
+        if(data){
+            try{
+                token = JSON.parse(data);
+            }catch(err){
+                console.log(err);
+            }
+        }
+        return token;
+    }
+    setUserToken(accessToken){
+        if(!accessToken){
+            //delete local token that saved last time 
+            this.localStorage.removeItem('token');
+            this.token = null;
+        }
+        this.token = accessToken;
+        localStorage.setItem('token',JSON.stringify(accessToken))
     }
     getCurrentUser() {
         return this.user
@@ -27,7 +49,8 @@ export default class Store {
         let members = new OrderedMap();
         if (channel) {
             channel.members.forEach((item, i) => {
-                const member = users.get(i)
+                const userId = `${i}`;
+                const member = this.users.get(userId)
                 if (this.user._id !== member._id) {
                     members = members.set(i, member)
                 }
@@ -109,8 +132,8 @@ export default class Store {
     }
 
     searchUsers(search = '') {
-        let searchItems = new OrderedMap();
-        if (search.length) {
+        /* let searchItems = new OrderedMap(); */
+        /* if (search.length) {
             //match search list
             users.forEach((user) => {
                 const query = _.toLower(search)
@@ -120,8 +143,8 @@ export default class Store {
                     searchItems = searchItems.set(userId, user)
                 }
             })
-        }
-        return searchItems.valueSeq();
+        } */
+        return this.search.user.valueSeq();
     }
     removeMemberFromChannel(channel = null, user = null) {
             if (!channel || !user) {
@@ -136,7 +159,14 @@ export default class Store {
         //login/logout-------------------------------------------
     setCurrentUser(user) {
         this.user = user;
-        localStorage.setItem('chatAppMe', JSON.stringify(user))
+        if(user){        
+            localStorage.setItem('chatAppMe', JSON.stringify(user));
+            //save this user to users collections in local
+            const userId = `${_.get(user,'_id')}`;
+            this.users = this.users.set(userId,user);
+        }
+
+    
         this.update();
     }
     getUserFromLocalStorage() {
@@ -148,28 +178,55 @@ export default class Store {
         }
         return user
     }
-    login(email, password) {
+    login(email = null, password = null) {
         const userEmail = _.toLower(email)
-        const _this = this
-        return new Promise((resolve, reject) => {
-            const user = users.find((user) => _.get(user, 'email') === userEmail)
 
-            /*             if (user) {
-                            _this.setCurrentUser(user)
-                        } */
-            try {
-                _this.setCurrentUser(user)
-            } catch (err) {
-                console.log(err)
-            }
-            console.log('email: ', email, 'password: ', password, 'user: ', user)
-            return user ? resolve(user) : reject('user not found')
-                /*     if (user) {
-                        return resolve(user)
-                    } else {
-                        return reject('user not found')
-                    } */
-        })
+
+        const user = {
+            email: userEmail,
+            password,
+        }
+        console.log("Trying to login with user info", user);
+        return new Promise((resolve, reject) => {
+            //call backend service and login with user data
+            this.service.post('api/users/login', user).then((res) => {
+                //successful user logged in 
+                const accessToken = _.get(res,'data');
+                const user = _.get(accessToken,'user');
+
+                this.setCurrentUser(user);
+                this.setUserToken(accessToken);
+
+                console.log('Got user login callback from the server',accessToken);
+
+            }).catch((err) => {
+                console.log("Got an error login from server",err)
+                //err.response.data.err.message
+                const message = _.get(err, 'response.data.err.message', 'Login error')
+                return reject(message)
+            })
+        });
+
+
+        // return new Promise((resolve, reject) => {
+        //     const user = users.find((user) => _.get(user, 'email') === userEmail)
+
+        //     /*             if (user) {
+        //                     _this.setCurrentUser(user)
+        //                 } */
+        //     try {
+        //         _this.setCurrentUser(user)
+        //     } catch (err) {
+        //         console.log(err)
+        //     }
+        //     console.log('email: ', email, 'password: ', password, 'user: ', user)
+        //     return user ? resolve(user) : reject('user not found')
+        //         /*     if (user) {
+        //                 return resolve(user)
+        //             } else {
+        //                 return reject('user not found')
+        //             } */
+        // })
     }
     signOut() {
         this.user = null;
