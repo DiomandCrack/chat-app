@@ -39,6 +39,7 @@ export default class Store {
         localStorage.setItem('token',JSON.stringify(accessToken))
     }
     getCurrentUser() {
+        
         return this.user
     }
     getActiveChannel() {
@@ -158,6 +159,7 @@ export default class Store {
         }
         //login/logout-------------------------------------------
     setCurrentUser(user) {
+        user.avatar = `https://api.adorable.io/avatars/100/${user._id}.png`;
         this.user = user;
         if(user){        
             localStorage.setItem('chatAppMe', JSON.stringify(user));
@@ -173,8 +175,10 @@ export default class Store {
         let user = null;
         const data = localStorage.getItem('chatAppMe')
         console.log('localData', data)
-        if (data) {
-            user = JSON.parse(data)
+        try{
+            user = JSON.parse(data);
+        }catch(err){
+            console.log(err);
         }
         return user
     }
@@ -229,8 +233,14 @@ export default class Store {
         // })
     }
     signOut() {
+        const userId = `${_.get(this.user,'_id',null)}`;
+
         this.user = null;
-        localStorage.removeItem('chatAppMe')
+        localStorage.removeItem('chatAppMe');
+        if(userId){
+            this.users = this.users.remove(userId);
+        }
+
         this.update();
     }
 }

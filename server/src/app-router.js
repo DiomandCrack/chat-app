@@ -36,6 +36,19 @@ class AppRouter {
             });
 
         });
+        /*
+        @endpoint:/api/users/me
+        @method:GET 
+        */
+        app.get('/api/users/me', (req, res, next) => {
+            let tokenId = req.get('authorization');
+            if (!tokenId) {
+                tokenId = null;
+            }
+            return res.json({
+                accessTokenId: tokenId
+            })
+        });
         /* 
         @endpoint: /api/users/:id
         @method: GET
@@ -67,7 +80,8 @@ class AppRouter {
                     err
                 })
             })
-        })
+        });
+
     }
 }
 
