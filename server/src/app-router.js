@@ -48,12 +48,14 @@ class AppRouter {
             }
 
             app.models.token.load(tokenId).then((accessToken) => {
-                return res.json(accessToken)
+                return res.json(accessToken);
             }).catch((err) => {
                 return res.status(401).json({
                     err
                 })
-            })
+            });
+
+
 
         });
         /* 

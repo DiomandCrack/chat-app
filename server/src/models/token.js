@@ -4,25 +4,31 @@ const OrderedMap = require('immutable').OrderedMap;
 class Token {
     constructor(app) {
         this.app = app;
+
         this.tokens = new OrderedMap();
     }
     load(tokenId = null) {
-        tokenId = `${tokenId}`
+        tokenId = `${tokenId}`;
         return new Promise((resolve, reject) => {
-            this.findTokenById(tokenId, (err, token) => {
-                return err ? reject(err) : resolve(token);
-            });
 
-        })
+            const tokenFromCache = this.tokens.get(tokenId);
+            if (!tokenFromCache) {
+                return resolve(tokenFromCache)
+            }
+            this.findTokenById(tokenId, (err, token) => {
+                if (!err && token) {
+                    const id = ` ${_.get(token, '_id')}`;
+                    this.tokens = this.tokens.set(id, token);
+                }
+                return err ? reject(err) : resolve(token)
+            })
+        });
     }
     findTokenById(id, cb = () => {}) {
-        const objectId = new ObjectID(id);
-        const query = { _id: objectId }
-        this.app.db.collection('tokens').findOne(query, (err, token) => {
-            if (err || !token) {
-                return cb({ message: 'Not found' }, null)
-            }
-            return cb(null, token)
+        console.log('start validate');
+        const query = { _id: new ObjectID(id) };
+        this.app.db.collection('token').findOne(query, (err, token) => {
+            return err || !token ? cb({ message: 'Not found' }) : cb(null, token)
         });
     }
     create(userId) {
