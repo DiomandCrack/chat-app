@@ -12,7 +12,7 @@ class User {
     }
 
     load(id) {
-
+        id = `${id}`;
         return new Promise((resolve, reject) => {
             //find in cache if found return and needn't to query db
             const userInCache = this.users.get(id);

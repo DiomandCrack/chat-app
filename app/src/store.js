@@ -17,31 +17,69 @@ export default class Store {
             users: new OrderedMap(),
         }
     }
-    getTokenFromLocalStorage(){
+
+    getTokenFromLocalStorage() {
+        if (this.token) {
+            return this.token;
+        }
         let token;
         const data = localStorage.getItem('token');
-        if(data){
-            try{
+        if (data) {
+            try {
                 token = JSON.parse(data);
-            }catch(err){
+            } catch (err) {
                 console.log(err);
             }
         }
         return token;
     }
-    setUserToken(accessToken){
-        if(!accessToken){
+
+    setUserToken(accessToken) {
+        if (!accessToken) {
             //delete local token that saved last time 
             this.localStorage.removeItem('token');
             this.token = null;
         }
         this.token = accessToken;
-        localStorage.setItem('token',JSON.stringify(accessToken))
+        localStorage.setItem('token', JSON.stringify(accessToken))
     }
+
+    getUserFromLocalStorage() {
+        let user = null;
+        const data = localStorage.getItem('chatAppMe')
+            // console.log('localData', data)
+        try {
+            user = JSON.parse(data);
+        } catch (err) {
+            console.log(err);
+        }
+        if (user) {
+            //try to connect to backend server and verify this user is exist.
+            const token = this.getTokenFromLocalStorage();
+            const tokenId = _.get(token, '_id');
+            const options = {
+                headers: {
+                    authorization: tokenId,
+                }
+            }
+            this.service.get('api/users/me', options).then((res) => {
+                // this mean user is logged with this token id
+                const accessToken = res.data;
+                const user = _.get(accessToken, 'user')
+                this.setCurrentUser(user);
+                this.setUserToken(accessToken);
+            }).catch(() => {
+                this.signOut()
+            })
+        }
+        return user
+    }
+
     getCurrentUser() {
-        
+
         return this.user
     }
+
     getActiveChannel() {
         return this.activeChannelId ? this.channels.get(this.activeChannelId) : this.channels.first();
     }
@@ -71,6 +109,7 @@ export default class Store {
         this.activeChannelId = id;
         this.update();
     }
+
     getMessagesFromChannel(channel) {
         let messages = new OrderedMap();
 
@@ -107,6 +146,7 @@ export default class Store {
         this.channels = this.channels.set(`${index}`, channel)
         this.update();
     }
+
     addUserToChannel(channelId, userId) {
         console.log(channelId, userId);
         const channel = this.channels.get(channelId);
@@ -117,6 +157,7 @@ export default class Store {
             this.update();
         }
     }
+
     getMessages() {
         return this.messages.valueSeq();
     }
@@ -147,6 +188,7 @@ export default class Store {
         } */
         return this.search.user.valueSeq();
     }
+
     removeMemberFromChannel(channel = null, user = null) {
             if (!channel || !user) {
                 return;
@@ -161,31 +203,17 @@ export default class Store {
     setCurrentUser(user) {
         user.avatar = `https://api.adorable.io/avatars/100/${user._id}.png`;
         this.user = user;
-        if(user){        
+        if (user) {
             localStorage.setItem('chatAppMe', JSON.stringify(user));
             //save this user to users collections in local
             const userId = `${_.get(user,'_id')}`;
-            this.users = this.users.set(userId,user);
+            this.users = this.users.set(userId, user);
         }
 
-    
+
         this.update();
     }
-    getUserFromLocalStorage() {
-        let user = null;
-        const data = localStorage.getItem('chatAppMe')
-        console.log('localData', data)
-        try{
-            user = JSON.parse(data);
-        }catch(err){
-            console.log(err);
-        }
-        if(user){
-            //try to connect to backend server and verify this user is exist.
-            
-        }
-        return user
-    }
+
     login(email = null, password = null) {
         const userEmail = _.toLower(email)
 
@@ -199,17 +227,17 @@ export default class Store {
             //call backend service and login with user data
             this.service.post('api/users/login', user).then((res) => {
                 //successful user logged in 
-                const accessToken = _.get(res,'data');
-                const user = _.get(accessToken,'user');
+                const accessToken = _.get(res, 'data');
+                const user = _.get(accessToken, 'user');
 
                 this.setCurrentUser(user);
                 this.setUserToken(accessToken);
 
-                console.log('Got user login callback from the server',accessToken);
+                console.log('Got user login callback from the server', accessToken);
 
             }).catch((err) => {
-                console.log("Got an error login from server",err)
-                //err.response.data.err.message
+                console.log("Got an error login from server", err)
+                    //err.response.data.err.message
                 const message = _.get(err, 'response.data.err.message', 'Login error')
                 return reject(message)
             })
@@ -236,12 +264,14 @@ export default class Store {
         //             } */
         // })
     }
+
     signOut() {
         const userId = `${_.get(this.user,'_id',null)}`;
 
         this.user = null;
         localStorage.removeItem('chatAppMe');
-        if(userId){
+        localStorage.removeItem('token');
+        if (userId) {
             this.users = this.users.remove(userId);
         }
 

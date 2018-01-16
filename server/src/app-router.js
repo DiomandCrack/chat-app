@@ -46,8 +46,9 @@ class AppRouter {
                 //get token from query
                 tokenId = _.get(req, 'query.auth');
             }
-
-            app.models.token.load(tokenId).then((accessToken) => {
+            // console.log(tokenId);
+            app.models.token.loadTokenAndUser(tokenId).then((accessToken) => {
+                _.unset(accessToken, 'password')
                 return res.json(accessToken);
             }).catch((err) => {
                 return res.status(401).json({
