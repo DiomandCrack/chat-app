@@ -13,6 +13,7 @@ class Token {
             this.load(tokenId).then((token) => {
                 const userId = `${_.get(token, 'userId')}`;
                 this.app.models.user.load(userId).then((user) => {
+                    token.user = user;
                     return resolve(token);
                 }).catch(err => reject(err));
             }).catch((err) => {
