@@ -94,7 +94,6 @@ export default class Messenger extends Component {
         members.forEach((member,i)=>{
             names.push(_.get(member,'name'))
         })
-        console.log(members,names)
         const title = _.join(names,',')
         if(!title && _.get(channel,'isNew')){
             return 'new channel'

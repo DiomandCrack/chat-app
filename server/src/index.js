@@ -25,6 +25,9 @@ app.use(bodyParser.json({
     limit: '50mb'
 }));
 
+app.wss = new Server({
+    server: app.server
+});
 // Connect to Mongo Database
 //promise
 new Database().connect().then((db) => {
@@ -53,9 +56,7 @@ app.routers = new AppRouter(app)
 
 
 
-app.wss = new Server({
-    server: app.server
-});
+
 
 
 /*

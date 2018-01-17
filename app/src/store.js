@@ -1,6 +1,7 @@
 import { OrderedMap } from 'immutable';
 import Service from './service'
 import _ from 'lodash';
+import RealTime from './realtime'
 
 export default class Store {
     constructor(appComponent) {
@@ -16,6 +17,7 @@ export default class Store {
         this.search = {
             users: new OrderedMap(),
         }
+        this.realtime = new RealTime(this);
     }
 
     getTokenFromLocalStorage() {
@@ -33,7 +35,10 @@ export default class Store {
         }
         return token;
     }
-
+    getUserToken() {
+        const tokenId = _.get(this.token, '_id', null);
+        return tokenId;
+    }
     setUserToken(accessToken) {
         if (!accessToken) {
             //delete local token that saved last time 
