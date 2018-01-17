@@ -1,10 +1,26 @@
 const OrderedMap = require('immutable').OrderedMap;
 const ObjectID = require('mongodb').ObjectID;
+const _ = require('lodash');
 class Connection {
     constructor(app) {
         this.app = app;
         this.connection = new OrderedMap();
         this.modelDidload();
+    }
+    work(msg) {
+        const action = _.get(msg, 'action');
+        const payload = _.get(msg, 'payload');
+        switch (action) {
+            case 'auth':
+                {
+                    const userTokenId = payload;
+                    console.log("user with token ID is:", userTokenId, typeof userTokenId);
+                    break;
+                }
+            default:
+                break;
+        }
+
     }
     decodeMessage(msg) {
         let messageObject = null;
@@ -24,6 +40,7 @@ class Connection {
             ws.on('message', (msg) => {
 
                 const message = this.decodeMessage(msg);
+                this.work(message);
                 console.log("SERVER:message from a client", message);
             })
             console.log('SomeOne connected ', sokectId);

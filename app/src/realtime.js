@@ -11,7 +11,7 @@ export default class RealTime {
         const tokenId = store.getUserToken();
         const message = {
             action: 'auth',
-            payload: tokenId,
+            payload: `${tokenId}`,
         };
         this.send(message);
 

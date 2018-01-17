@@ -1,7 +1,7 @@
 const moment = require('moment');
 const ObjectID = require('mongodb').ObjectID;
 const OrderedMap = require('immutable').OrderedMap;
-const _ = require('lodash')
+const _ = require('lodash');
 class Token {
     constructor(app) {
         this.app = app;
