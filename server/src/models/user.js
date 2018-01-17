@@ -9,8 +9,25 @@ class User {
     constructor(app) {
         this.app = app;
         this.users = new OrderedMap();
-    }
 
+    }
+    search(q = '') {
+        return new Promise((resolve, reject) => {
+            const regex = new RegExp(q, 'i');
+            const query = {
+                $or: [
+                    { name: { $regex: regex } },
+                    { email: { $regex: regex } },
+                ],
+            };
+            this.app.db.collection('users').find(query, { _id: true, name: true, created: true, }).toArray((err, user) => {
+                if (err || !user || !user.length) {
+                    return reject({ message: 'Not found' });
+                }
+                return resolve(user);
+            });
+        });
+    }
     load(id) {
         id = `${id}`;
         return new Promise((resolve, reject) => {

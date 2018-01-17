@@ -258,9 +258,12 @@ export default class Messenger extends Component {
                                     name='searchMember'
                                     value={this.state.searchUser}
                                     onChange={(e)=>{
+                                    const searchUserText = _.get(e,'target.value');
                                     this.setState({
-                                        searchUser: _.get(e,'target.value'),
+                                        searchUser:searchUserText,
                                         showSearchUser:true,
+                                    },()=>{
+                                        store.startSearchUsersFromServer(searchUserText);
                                     })
                                 }}
                                         ref={(input)=>this.searchInput = input}
@@ -279,7 +282,7 @@ export default class Messenger extends Component {
                                     store.addUserToChannel(channelId,userId)
                                 })
                             }} 
-                            search={this.state.searchUser} 
+                          
                             store={store}/>:null}
                            
                         </div>

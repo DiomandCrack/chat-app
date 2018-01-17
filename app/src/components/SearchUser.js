@@ -9,8 +9,8 @@ export default class SearchUser extends Component {
         }
     }
     render(){
-        const { store , search } = this.props;
-        const users = store.searchUsers(search);
+        const { store } = this.props;
+        const users = store.getSearchUsers();
         const usersList = users.map((user,i)=>(
             <li
             onClick={()=>this.handleOnClick(user)} 

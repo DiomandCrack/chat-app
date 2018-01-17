@@ -22,7 +22,7 @@ export default class Store {
         if (this.token) {
             return this.token;
         }
-        let token;
+        let token = null;
         const data = localStorage.getItem('token');
         if (data) {
             try {
@@ -39,6 +39,7 @@ export default class Store {
             //delete local token that saved last time 
             this.localStorage.removeItem('token');
             this.token = null;
+            return;
         }
         this.token = accessToken;
         localStorage.setItem('token', JSON.stringify(accessToken))
@@ -68,7 +69,8 @@ export default class Store {
                 const user = _.get(accessToken, 'user')
                 this.setCurrentUser(user);
                 this.setUserToken(accessToken);
-            }).catch(() => {
+            }).catch((err) => {
+                console.log(err);
                 this.signOut()
             })
         }
@@ -172,8 +174,34 @@ export default class Store {
     update() {
         this.app.forceUpdate();
     }
+    loadUserAvatar(user) {
+        return `https://api.adorable.io/avatars/100/${user._id}.png`;
+    }
+    startSearchUsersFromServer(q = '') {
+        //query to backend server and get list of users;
+        const data = { search: q };
+        this.search.users = this.search.users.clear();
+        this.service.post('api/users/search', data).then((res) => {
+            const users = _.get(res, 'data', []);
+            _.each(users, (user) => {
+                //cache to this.users;
+                //add user to this.search.users;
+                const userId = `${_.get(user,'_id')}`;
 
-    searchUsers(search = '') {
+                user.avatar = this.loadUserAvatar(user);
+                this.users = this.users.set(userId, user);
+                this.search.users = this.search.users.set(userId, user);
+
+            });
+            // console.log("Get list of users from server", users);
+            this.update();
+        }).catch((err) => {
+
+            console.log("user not found");
+        });
+    }
+
+    getSearchUsers() {
         /* let searchItems = new OrderedMap(); */
         /* if (search.length) {
             //match search list
@@ -186,7 +214,8 @@ export default class Store {
                 }
             })
         } */
-        return this.search.user.valueSeq();
+
+        return this.search.users.valueSeq();
     }
 
     removeMemberFromChannel(channel = null, user = null) {
