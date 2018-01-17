@@ -38,14 +38,12 @@ class Token {
 
                 if (!err && token) {
                     this.tokens = this.tokens.set(id, token);
-                    console.log(this.tokens)
                 }
                 return err ? reject(err) : resolve(token);
             })
         });
     }
     findTokenById(id, cb = () => {}) {
-        console.log('start validate');
         const query = { _id: new ObjectID(id) };
         this.app.db.collection('tokens').findOne(query, (err, token) => {
             return err || !token ? cb({ message: 'Not found' }) : cb(null, token)

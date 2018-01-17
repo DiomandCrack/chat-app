@@ -48,7 +48,6 @@ class AppRouter {
             }
             // console.log(tokenId);
             app.models.token.loadTokenAndUser(tokenId).then((accessToken) => {
-                console.log(accessToken)
                 _.unset(accessToken, 'user.password')
                 return res.json(accessToken);
             }).catch((err) => {
@@ -94,7 +93,7 @@ class AppRouter {
         app.post('/api/users/login', (req, res, next) => {
             const body = _.get(req, 'body');
             app.models.user.login(body).then((token) => {
-                console.log("successful login user.", token)
+                // console.log("successful login user.", token)
                 _.unset(token, 'user.password')
                 return res.status(200).json(token);
             }).catch(err => {

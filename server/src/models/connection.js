@@ -6,16 +6,29 @@ class Connection {
         this.connection = new OrderedMap();
         this.modelDidload();
     }
+    decodeMessage(msg) {
+        let messageObject = null;
+        try {
+            messageObject = JSON.parse(msg);
+            return messageObject
+        } catch (err) {
+            console.log('An error decode the socket message', msg)
+        }
+        return messageObject;
+    }
+
     modelDidload() {
 
         this.app.wss.on('connection', (ws) => {
             const sokectId = new ObjectID().toString();
             ws.on('message', (msg) => {
-                console.log("SERVER:message from a client", msg);
+
+                const message = this.decodeMessage(msg);
+                console.log("SERVER:message from a client", message);
             })
             console.log('SomeOne connected ', sokectId);
             ws.on('close', () => {
-                console.log('someone disconnected to the server', sokectId)
+                // console.log('someone disconnected to the server', sokectId)
             })
         });
     }

@@ -142,7 +142,6 @@ class User {
                 //do checked
                 const isValid = fieldValidation.do();
                 const errMsg = _.get(fieldValidation, 'errorMessage')
-                console.log(errMsg)
                 if (!isValid) {
                     errors.push(errMsg);
                 }
@@ -155,7 +154,7 @@ class User {
         //validate email that is unique
         const email = _.toLower(_.trim(_.get(user, 'email', '')));
         this.app.db.collection('users').findOne({ email }, (err, result) => {
-            console.log("checked", err, result)
+
             if (err || result) {
                 return cb({ message: 'Email is already exist' }, null)
             }
@@ -179,7 +178,7 @@ class User {
         return new Promise((resolve, reject) => {
 
             this.beforeSave(user, (err, user) => {
-                console.log('create', err, user)
+
                 if (err) {
                     return reject(err)
                 }
