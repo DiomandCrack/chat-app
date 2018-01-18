@@ -28,6 +28,29 @@ class Connection {
                     this.app.models.channel.create(channel).then((channelObject) => {
                         //successful created channel
                         console.log('successful create new channel', channelObject);
+                        //send backend to all members in this channel with new channel created
+                        let memberConnections = [];
+                        _.each(_.get(channelObject, 'members', []), (id) => {
+                            const userId = id.toString();
+                            const memberConnection = this.connections.filter((connection) => {
+                                return `${connection.userId}` === userId
+                            });
+                            if (memberConnection.size) {
+                                memberConnection.forEach((connection) => {
+                                    const ws = connection.ws;
+                                    const obj = {
+                                        action: 'channel_added',
+                                        payload: channelObject,
+                                    }
+                                    this.send(ws, obj);
+                                })
+
+                            }
+                            console.log(memberConnection);
+                        });
+                        // const connections = this.connections.filter((connection)=>{
+                        //     `${conncetion.userId}`
+                        // })
                     }).catch(err => {
                         console.log(err);
                     });
