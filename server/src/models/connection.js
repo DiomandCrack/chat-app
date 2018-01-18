@@ -39,18 +39,16 @@ class Connection {
                                 memberConnection.forEach((connection) => {
                                     const ws = connection.ws;
                                     const obj = {
-                                        action: 'channel_added',
-                                        payload: channelObject,
-                                    }
+                                            action: 'channel_added',
+                                            payload: channelObject,
+                                        }
+                                        //send to socket
                                     this.send(ws, obj);
                                 })
 
                             }
-                            console.log(memberConnection);
+
                         });
-                        // const connections = this.connections.filter((connection)=>{
-                        //     `${conncetion.userId}`
-                        // })
                     }).catch(err => {
                         console.log(err);
                     });
