@@ -17,7 +17,7 @@ export default class Store {
         this.search = {
             users: new OrderedMap(),
         }
-        this.realtime = new RealTime(this);
+        this.realTime = new RealTime(this);
     }
 
     getTokenFromLocalStorage() {
@@ -139,10 +139,20 @@ export default class Store {
         if (channelId) {
             let channel = this.channels.get(channelId);
 
-            channel.isNew = false;
+
             channel.lastMessage = _.get(message, 'main', '')
 
+            //send channel info to server
+            const obj = {
+                action: 'create_channel',
+                payload: channel,
+            }
+            this.realTime.send(obj);
+            console.log('Channel', channel);
+
             channel.messages = channel.messages.set(id, true);
+
+            channel.isNew = false;
             this.channels = this.channels.set(channelId, channel)
         }
         this.update();

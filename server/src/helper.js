@@ -6,6 +6,11 @@ const isEmail = (emaill) => {
     return regex.test(emaill);
 }
 
+const toString = (id = '') => {
+    return `${id}`;
+}
+
 module.exports = {
-    isEmail
+    isEmail,
+    toString
 }

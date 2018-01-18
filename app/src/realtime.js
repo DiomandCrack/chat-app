@@ -13,7 +13,9 @@ export default class RealTime {
             action: 'auth',
             payload: `${tokenId}`,
         };
-        this.send(message);
+        if (tokenId) {
+            this.send(message);
+        }
 
     }
     send(message = {}) {
@@ -25,12 +27,16 @@ export default class RealTime {
     }
     connect() {
         console.log('begin connection to server');
-        this.ws = new WebSocket('ws://localhost:3001');
+        const ws = new WebSocket('ws://localhost:3001');
+        this.ws = ws
         this.ws.onopen = () => {
             console.log('You are connection');
             //tell server who I am；
             this.isConnected = true;
             this.authentication();
+            ws.onmessage = (e) => {
+                console.log("message from server", e.data)
+            }
         }
         this.ws.onclose = () => {
             console.log('You disconnected');
