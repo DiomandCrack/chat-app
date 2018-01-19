@@ -154,6 +154,13 @@ export default class Store {
                 payload: channel,
             }
             this.realTime.send(obj);
+
+            //send to the server via websocket to create new message and notify to other members;
+            this.realTime.send({
+                action: 'create_message',
+                payload: message,
+            });
+
             console.log('Channel', channel);
 
             channel.messages = channel.messages.set(id, true);
@@ -282,7 +289,8 @@ export default class Store {
 
                 this.setCurrentUser(user);
                 this.setUserToken(accessToken);
-
+                //call to realtime and connect again to sokect serer with this user
+                this.realTime.connect();
                 console.log('Got user login callback from the server', accessToken);
 
             }).catch((err) => {

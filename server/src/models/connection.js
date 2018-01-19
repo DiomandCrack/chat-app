@@ -15,7 +15,34 @@ class Connection {
     work(socketId, msg) {
         const action = _.get(msg, 'action');
         const payload = _.get(msg, 'payload');
+        const userConnection = this.connections.get(socketId);
         switch (action) {
+            case 'create_message':
+                {
+                    if (userConnection.isAuthenticated) {
+                        let messageObject = payload;
+                        messageObject.userId = _.get(userConnection, 'userId');
+                        this.app.models.message.create(messageObject).then((message) => {
+                            //message created successfully
+                            const userId = _.get(message, 'userId');
+                            this.app.models.user.load(userId).then((user) => {
+                                console.log(user)
+                                message.user = user;
+                                //send back to all members in this channel
+                                console.log('new message', message)
+                            }).catch(err => err)
+                        }).catch(err => {
+                            //send back to the sokect client who sent this message with err
+                            const ws = userConnection.ws;
+                            this.send(ws, {
+                                action: 'create_message_error',
+                                payload,
+                            });
+                        })
+                    }
+
+                    break;
+                }
             case 'create_channel':
                 {
                     console.log('channel created from client', channel);
