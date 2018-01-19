@@ -8,6 +8,30 @@ class Channel {
         this.app = app;
         this.channels = new OrderedMap();
     }
+    load(id) {
+        return new Promise((resolve, reject) => {
+            id = _.toString(id);
+            //first find in cache
+            const channelFromCache = this.channels.get(id);
+            if (channelFromCache) {
+                return resolve(channelFromCache);
+            }
+            //find in db
+            this.findById(id).then((channel) => resolve(channel)).catch(err => reject(err));
+        });
+
+    }
+    findById(id) {
+
+        return new Promise((resolve, reject) => {
+            this.app.db.collection('channels').findOne({ _id: new ObjectID(id) }, (err, channel) => {
+                if (err || !channel) {
+                    return reject(err ? err : 'not found');
+                }
+                return resolve(channel);
+            });
+        });
+    }
     create(obj) {
 
         return new Promise((resolve, reject) => {

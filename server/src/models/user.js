@@ -171,7 +171,6 @@ class User {
             const password = _.get(user, 'password');
             const hashPassword = bcrypt.hashSync(password, saltRound);
             const name = _.trim(_.get(user, 'name'));
-
             const userFormatted = {
                 name: name,
                 email,

@@ -24,13 +24,27 @@ class Connection {
                         messageObject.userId = _.get(userConnection, 'userId');
                         this.app.models.message.create(messageObject).then((message) => {
                             //message created successfully
-                            const userId = _.get(message, 'userId');
-                            this.app.models.user.load(userId).then((user) => {
-                                console.log(user)
-                                message.user = user;
-                                //send back to all members in this channel
-                                console.log('new message', message)
-                            }).catch(err => err)
+                            console.log('Message Created', message);
+                            const channelId = _.toString(_.get(message, 'channelId'));
+                            this.app.models.channel.load(channelId).then((channel) => {
+                                // console.log('got chnanel of the message created', channel);
+                                const memberIds = _.get(channel, 'members', []);
+                                _.each(memberIds, (memberId) => {
+                                    memberId = _.toString(memberId);
+                                    const memberConnection = this.connections.filter((channel) => _.toString(channel.userId));
+                                    memberConnection.forEach((connection) => {
+
+                                        const ws = connection.ws;
+
+                                        this.send(ws, {
+                                            action: 'message_added',
+                                            payload: message,
+                                        })
+
+                                    });
+                                });
+                            });
+
                         }).catch(err => {
                             //send back to the sokect client who sent this message with err
                             const ws = userConnection.ws;

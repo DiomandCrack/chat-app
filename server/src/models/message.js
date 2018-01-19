@@ -18,9 +18,19 @@ class Message {
                 channelId,
                 created: new Date(),
             }
+            const app = this.app;
+            app.db.collection('messages').insertOne(message, (err, info) => {
 
-            this.app.db.collection('messages').insertOne(message, (err, info) => {
-                return err ? reject(err) : resolve(message);
+                if (!err) {
+                    app.models.user.load(_.toString(userId)).then((user) => {
+                        _.unset(user, 'password');
+                        _.unset(user, 'email');
+                        message.user = user;
+                        return resolve(message);
+                    }).catch(err => reject(err));
+                } else {
+                    return reject(err);
+                }
             });
 
         });

@@ -186,9 +186,9 @@ export default class Messenger extends Component {
                 <div className='message-main'>
                     <div className='message-info'>
                         <div className='message-author'>
-                            {_.get(message,'me')?'我':_.get(_.get(message,'user'),'name')}
+                            {_.get(message,'me')?'我':_.get(message,'user.name')}
                         </div>
-                        <time className='send-time'>{message.time}</time>
+                        <time className='send-time'>{message.created}</time>
                     </div>
                     <div className='message-text'>
                         <div>

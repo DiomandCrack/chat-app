@@ -51,8 +51,10 @@ export default class Store {
     }
 
     addUserToCache(user) {
+        user.avatar = this.loadUserAvatar(user);
         const id = `${user._id}`;
         this.users = this.users.set(id, user);
+
         this.update();
     }
 
@@ -134,7 +136,16 @@ export default class Store {
         }
         return messages.valueSeq()
     }
-
+    setMessageToCache(message) {
+        const id = _.toString(_.get(message, '_id'));
+        this.messages = this.messages.set(id, message);
+        const channelId = _.toString(_.get(message, 'channelId'));
+        const channel = this.channels.get(channelId);
+        if (channel) {
+            channel.messages = channel.messages.set(id, true);
+        }
+        this.update();
+    }
     addMessage(id, message = {}) {
         //add user object
         const user = this.getCurrentUser();
