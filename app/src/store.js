@@ -50,6 +50,12 @@ export default class Store {
         localStorage.setItem('token', JSON.stringify(accessToken))
     }
 
+    addUserToCache(user) {
+        const id = `${user._id}`;
+        this.users = this.users.set(id, user);
+        this.update();
+    }
+
     getUserFromLocalStorage() {
         let user = null;
         const data = localStorage.getItem('chatAppMe')

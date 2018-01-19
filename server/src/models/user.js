@@ -28,6 +28,15 @@ class User {
             });
         });
     }
+
+    find(query = {}, options = {}) {
+        return new Promise((resolve, reject) => {
+            this.app.db.collection('users').find(query, options).toArray((err, users) => {
+                return err ? reject(err) : resolve(users);
+            });
+        })
+    }
+
     load(id) {
         id = `${id}`;
         return new Promise((resolve, reject) => {

@@ -31,6 +31,7 @@ export default class RealTime {
         return message;
     }
     readMessage(msg) {
+        const store = this.store;
         const message = this.decodeMessage(msg);
         const action = _.get(message, 'action', '');
         const payload = _.get(message, 'payload');
@@ -38,18 +39,27 @@ export default class RealTime {
             case 'channel_added':
                 {
                     //to do check payload
+                    console.log(payload)
                     const channelId = `${payload._id}`;
                     const userId = `${payload.userId}`;
+                    const users = _.get(payload, 'users', []);
                     const channel = {
                         _id: `${channelId}`,
-                        title: _.get(payload, 'title'),
+                        title: _.get(payload, 'title', ''),
                         lastMessage: _.get(payload, 'lastMessage'),
                         members: new OrderedMap(),
                         messages: new OrderedMap(),
                         created: Date.now(),
-                        userId: userId,
-                    }
-                    this.store.addChannel(channelId, channel);
+                        userId,
+                        isNew: false,
+                    };
+                    _.each(users, (user) => {
+                        //and this user to store.users collection
+                        const memberId = `${user._id}`;
+                        store.addUserToCache(user);
+                        channel.members = channel.members.set(memberId, true);
+                    })
+                    store.addChannel(channelId, channel);
                     break;
                 }
             default:
@@ -73,8 +83,8 @@ export default class RealTime {
             this.isConnected = true;
             this.authentication();
             ws.onmessage = (e) => {
-                this.readMessage(_.get(e, 'data'));
-                console.log("message from server", e.data)
+                this.readMessage(_.get(e, 'data', {}));
+                console.log("message from server", e.data);
             }
         }
         this.ws.onclose = () => {

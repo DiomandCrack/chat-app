@@ -30,25 +30,41 @@ class Connection {
                         console.log('successful create new channel', channelObject);
                         //send backend to all members in this channel with new channel created
                         let memberConnections = [];
-                        _.each(_.get(channelObject, 'members', []), (id) => {
-                            const userId = id.toString();
-                            const memberConnection = this.connections.filter((connection) => {
-                                return `${connection.userId}` === userId
-                            });
-                            if (memberConnection.size) {
-                                memberConnection.forEach((connection) => {
-                                    const ws = connection.ws;
-                                    const obj = {
+                        const memberIds = _.get(channelObject, 'members', []);
+                        //fetch all users has memberIds
+                        const query = {
+                            _id: {
+                                $in: memberIds
+                            }
+                        }
+                        const queryOptions = {
+                            _id: true,
+                            name: true,
+                            created: true,
+                        }
+                        this.app.models.user.find(query, queryOptions).then((users) => {
+                            channelObject.users = users;
+
+                            _.each(memberIds, (id) => {
+                                const userId = id.toString();
+                                const memberConnection = this.connections.filter((connection) => {
+                                    return `${connection.userId}` === userId;
+                                });
+                                if (memberConnection.size) {
+                                    memberConnection.forEach((connection) => {
+                                        const ws = connection.ws;
+                                        const obj = {
                                             action: 'channel_added',
                                             payload: channelObject,
-                                        }
-                                        //send to socket
-                                    this.send(ws, obj);
-                                })
-
-                            }
-
+                                        };
+                                        //send to socket client matching userId in channel members
+                                        this.send(ws, obj);
+                                    })
+                                }
+                            })
                         });
+
+
                     }).catch(err => {
                         console.log(err);
                     });
