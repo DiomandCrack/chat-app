@@ -51,8 +51,8 @@ export default class RealTime {
                         channelId: _.get(payload, 'channelId'),
                         created: _.get(payload, 'created', new Date()),
                         me: currentUserId === _.toString(_.get(payload, 'userId')),
+                        user,
                     };
-                    messageObject.user = user;
                     console.log('messageObject', messageObject);
                     store.setMessageToCache(messageObject);
 

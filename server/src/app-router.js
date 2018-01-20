@@ -102,6 +102,47 @@ class AppRouter {
                 })
             })
         });
+        /*
+        @endpoint:/api/channels/:channelId
+        @method: GET
+        */
+        app.get('/api/channels/:id', (req, res, next) => {
+            const channelId = _.get(req, 'params.id');
+            if (!channelId) {
+                return res.status(404).json({
+                    err: {
+                        message: 'Not Found'
+                    }
+                });
+            }
+            app.models.channel.load(channelId).then((channel) => {
+                //fetch all the user to memberoId
+                const members = channel.members;
+                const query = {
+                    _id: { $in: members },
+                }
+                const options = {
+                    _id: 1,
+                    name: 1,
+                    created: 1,
+                }
+                app.models.user.find(query, options).then((users) => {
+                    channel.users = users;
+                    return res.status(200).json(channel);
+                }).catch(err => res.status(404).json({
+                    err: {
+                        message: 'Not Found'
+                    }
+                }));
+
+            }).catch((err) => {
+                return res.status(404).json({
+                    err: {
+                        message: 'Not Found'
+                    }
+                });
+            });
+        })
 
     }
 }

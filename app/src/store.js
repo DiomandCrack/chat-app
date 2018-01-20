@@ -143,6 +143,14 @@ export default class Store {
         const channel = this.channels.get(channelId);
         if (channel) {
             channel.messages = channel.messages.set(id, true);
+        } else {
+            //fetch to the server with channel info
+            this.service.get(`api/channels/${channelId}`).then((response) => {
+                const channel = _.get(response, 'data');
+
+                this.channels = this.channels.set(channel);
+
+            });
         }
         this.update();
     }
