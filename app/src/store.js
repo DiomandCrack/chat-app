@@ -18,8 +18,27 @@ export default class Store {
             users: new OrderedMap(),
         }
         this.realTime = new RealTime(this);
+        this.fetchUserChannel();
     }
+    fetchUserChannel() {
+        const userToken = this.getUserToken();
 
+        if (userToken) {
+            const options = {
+                headers: {
+                    authorization: userToken,
+                }
+            }
+            this.service.get('api/me/channels', options).then(response => {
+                const channels = response.data;
+                _.each(channels, (channel) => {
+                    this.realTime.onAddChannel(channel);
+                });
+            }).catch(err => {
+                console.log('An err fetching user channels', err);
+            });
+        }
+    }
     getTokenFromLocalStorage() {
         if (this.token) {
             return this.token;
@@ -147,9 +166,12 @@ export default class Store {
             //fetch to the server with channel info
             this.service.get(`api/channels/${channelId}`).then((response) => {
                 const channel = _.get(response, 'data');
-
-                this.channels = this.channels.set(channel);
-
+                // const users = _.get(channel, 'users');
+                // this.channels = this.channels.set(channelId, channel);
+                // _.each(users, (user) => {
+                //     this.addUserToCache(user);
+                // });
+                this.realTime.onAddChannel(channel);
             });
         }
         this.update();
@@ -310,7 +332,9 @@ export default class Store {
                 this.setUserToken(accessToken);
                 //call to realtime and connect again to sokect serer with this user
                 this.realTime.connect();
-                console.log('Got user login callback from the server', accessToken);
+                //fecthing user channel
+
+                // console.log('Got user login callback from the server', accessToken);
 
             }).catch((err) => {
                 console.log("Got an error login from server", err)

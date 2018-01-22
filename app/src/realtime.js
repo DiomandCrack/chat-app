@@ -60,33 +60,37 @@ export default class RealTime {
                 }
             case 'channel_added':
                 {
-                    //to do check payload
-                    console.log(payload)
-                    const channelId = `${payload._id}`;
-                    const userId = `${payload.userId}`;
-                    const users = _.get(payload, 'users', []);
-                    const channel = {
-                        _id: `${channelId}`,
-                        title: _.get(payload, 'title', ''),
-                        lastMessage: _.get(payload, 'lastMessage'),
-                        members: new OrderedMap(),
-                        messages: new OrderedMap(),
-                        created: Date.now(),
-                        userId,
-                        isNew: false,
-                    };
-                    _.each(users, (user) => {
-                        //and this user to store.users collection
-                        const memberId = `${user._id}`;
-                        store.addUserToCache(user);
-                        channel.members = channel.members.set(memberId, true);
-                    })
-                    store.addChannel(channelId, channel);
+                    this.onAddChannel(payload);
                     break;
                 }
             default:
                 break;
         }
+    }
+    onAddChannel(payload) {
+
+        //to do check payload
+        const store = this.store;
+        const channelId = `${payload._id}`;
+        const userId = `${payload.userId}`;
+        const users = _.get(payload, 'users', []);
+        const channel = {
+            _id: `${channelId}`,
+            title: _.get(payload, 'title', ''),
+            lastMessage: _.get(payload, 'lastMessage'),
+            members: new OrderedMap(),
+            messages: new OrderedMap(),
+            created: Date.now(),
+            userId,
+            isNew: false,
+        };
+        _.each(users, (user) => {
+            //and this user to store.users collection
+            const memberId = `${user._id}`;
+            store.addUserToCache(user);
+            channel.members = channel.members.set(memberId, true);
+        })
+        store.addChannel(channelId, channel);
     }
     send(message = {}) {
         const isConnected = this.isConnected;

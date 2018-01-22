@@ -21,6 +21,21 @@ class Channel {
         });
 
     }
+    aggregate(q) {
+        return new Promise((resolve, reject) => {
+            this.app.db.collection('channels').aggregate(q, (err, channel) => {
+                return err ? reject(err) : resolve(channel);
+            });
+        });
+    }
+    find(q, options = {}) {
+        console.log(q)
+        return new Promise((resolve, reject) => {
+            this.app.db.collection('channels').find(q, options).toArray((err, channel) => {
+                return err ? reject(err) : resolve(channel);
+            });
+        });
+    }
     findById(id) {
 
         return new Promise((resolve, reject) => {

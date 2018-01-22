@@ -55,9 +55,73 @@ class AppRouter {
                     err
                 })
             });
+        });
+        /*
+        @endpoint: /api/me/channels
+        @method:GET
+        */
+        app.get('/api/me/channels', (req, res, next) => {
+            let tokenId = req.get('authorization');
+            if (!tokenId) {
+                //get token from query
+                tokenId = _.get(req, 'query.auth');
+            }
+            // console.log(tokenId);
+            app.models.token.loadTokenAndUser(tokenId).then((accessToken) => {
 
+                const userId = accessToken.userId;
+                //
+                const query = [{
+                        $lookup: {
+                            from: 'users',
+                            localField: 'members',
+                            foreignField: '_id',
+                            as: 'users',
+                        },
+                    },
+                    {
+                        $match: {
+                            members: { $all: [userId] }
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: true,
+                            title: true,
+                            lastMessage: true,
+                            created: true,
+                            members: true,
+                            users: {
+                                _id: true,
+                                name: true,
+                                created: true,
+                            },
+                        }
+                    },
+                    {
+                        $sort: {
+                            created: -1,
 
+                        }
+                    },
+                    {
+                        $limit: 50,
+                    }
+                ];
 
+                app.models.channel.aggregate(query).then((channels) => {
+                    return res.status(200).json(channels);
+                }).catch((err) => {
+                    return res.status(404).json({ error: { message: 'not found' } })
+                });
+
+            }).catch((err) => {
+                return res.status(401).json({
+                    err: {
+                        message: 'access denity'
+                    }
+                })
+            });
         });
         /*
         @endpoint:/api/users/search
@@ -75,8 +139,8 @@ class AppRouter {
         @method: GET
         */
         app.get('/api/users/:id', (req, res, next) => {
-            const userId = _.get(req, 'params.id')
-                // return res.json({ hi: 'there' })
+            const userId = _.get(req, 'params.id');
+            // return res.json({ hi: 'there' })
 
             app.models.user.load(userId).then((user) => {
                 _.unset(user, 'password')
