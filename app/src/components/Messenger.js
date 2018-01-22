@@ -82,6 +82,17 @@ export default class Messenger extends Component {
     //     }
 
     // }
+    renderChannelAvatars(channel){
+        const {store} = this.props;
+        const members = store.getMembersFromChannel(channel);
+        const maxDisplay = 4;
+        const total = members.size>maxDisplay?maxDisplay:members.size;
+        const avatars = members.map((user,index)=>{
+            return index<maxDisplay ? <img src={_.get(user,'avatar')} alt={_.get(user,'name')}/>:null;
+        });
+        
+        return <div className={classNames('channel-avatars',`channel-avatars-${total}`)}>{avatars}</div>;
+    }
     renderChannelTitle=(channel=null)=>{
         if(!channel){
             return null;
@@ -112,7 +123,6 @@ export default class Messenger extends Component {
                 _id:`${i}`,
                 author:`Author${i}`,
                 main: `the body of message ${i}`,
-                avatar:avatar,
                 time: '2小时前',
                 me:isMe
             }
@@ -199,13 +209,13 @@ export default class Messenger extends Component {
             </div>
         ))
         const channelsList = channels.map((channel,i) => (
-            <div className={classNames('channel',{'notify':_.get(channel,'notify')},{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
+            <div className={classNames('channel',{'notify':_.get(channel,'notify-')},{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
                  key={channel._id} 
                  onClick={()=>{
                 store.setActiveChannelId(channel._id)
             }}>
                 <div className='channel-image'>
-                    <img src={channel.avatar} alt=''/>
+                   {this.renderChannelAvatars(channel)}
                 </div>
                 <div className='channel-info'>
                     <h2>{this.renderChannelTitle(channel)}</h2>

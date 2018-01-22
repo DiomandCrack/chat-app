@@ -1,537 +1,92 @@
-@import url("https://fonts.googleapis.com/css?family=Ubuntu");
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-nav,
-section,
-summary {
-  display: block; }
+/*
+Error: Invalid CSS after "                &": expected "{", was "}"
+        on line 377 of partials/_modules.scss
+        from line 6 of App.scss
 
-audio,
-canvas,
-video {
-  display: inline-block; }
+372:                             height: 50%;
+373:                         }
+374:                     }
+375:                 }
+376:                 &
+377:             }
+378:         }
+379:         .channel-info {
+380:             overflow: hidden;
+381:             flex-grow: 1;
+382:             padding: 0 0.5rem;
 
-audio:not([controls]) {
-  display: none;
-  height: 0; }
-
-[hidden], template {
-  display: none; }
-
-html {
-  background: #fff;
-  color: #000;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%; }
-
-html,
-button,
-input,
-select,
-textarea {
-  font-family: sans-serif; }
-
-body {
-  margin: 0; }
-
-a {
-  background: transparent; }
-  a:focus {
-    outline: thin dotted; }
-  a:hover, a:active {
-    outline: 0; }
-
-h1 {
-  font-size: 2em;
-  margin: 0.67em 0; }
-
-h2 {
-  font-size: 1.5em;
-  margin: 0.83em 0; }
-
-h3 {
-  font-size: 1.17em;
-  margin: 1em 0; }
-
-h4 {
-  font-size: 1em;
-  margin: 1.33em 0; }
-
-h5 {
-  font-size: 0.83em;
-  margin: 1.67em 0; }
-
-h6 {
-  font-size: 0.75em;
-  margin: 2.33em 0; }
-
-abbr[title] {
-  border-bottom: 1px dotted; }
-
-b,
-strong {
-  font-weight: bold; }
-
-dfn {
-  font-style: italic; }
-
-mark {
-  background: #ff0;
-  color: #000; }
-
-code,
-kbd,
-pre,
-samp {
-  font-family: monospace, serif;
-  font-size: 1em; }
-
-pre {
+Backtrace:
+partials/_modules.scss:377
+App.scss:6
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:1278:in `expected'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:1208:in `expected'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:1203:in `tok!'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:677:in `block'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:747:in `declaration_or_ruleset'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:697:in `block_child'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:678:in `block'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:747:in `declaration_or_ruleset'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:697:in `block_child'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:678:in `block'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:747:in `declaration_or_ruleset'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:697:in `block_child'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:678:in `block'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:747:in `declaration_or_ruleset'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:697:in `block_child'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:678:in `block'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:670:in `ruleset'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:696:in `block_child'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:689:in `block_contents'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:137:in `stylesheet'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/scss/parser.rb:41:in `parse'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/engine.rb:414:in `_to_tree'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/engine.rb:321:in `to_tree'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:327:in `block in visit_import'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:88:in `block in with_import'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:135:in `with_frame'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:88:in `with_import'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:326:in `visit_import'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:162:in `block in visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:79:in `block in with_base'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:135:in `with_frame'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/stack.rb:79:in `with_base'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:162:in `visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:52:in `map'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:171:in `block in visit_children'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:183:in `with_environment'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:170:in `visit_children'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:190:in `visit_root'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/base.rb:36:in `visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:161:in `visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/visitors/perform.rb:10:in `visit'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/root_node.rb:36:in `css_tree'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/engine.rb:389:in `_render_with_sourcemap'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/engine.rb:307:in `render_with_sourcemap'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:462:in `update_stylesheet'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:209:in `each'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:443:in `on_file_changed'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-3.5.3/lib/sass/plugin/compiler.rb:320:in `block in watch'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/config.rb:23:in `call'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:115:in `_process_changes'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:19:in `block in loop_for'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/processor.rb:15:in `loop_for'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:84:in `_wait_for_changes'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/event/loop.rb:42:in `block in setup'
+C:/RailsInstaller/Ruby2.3.0/lib/ruby/gems/2.3.0/gems/sass-listen-4.0.0/lib/sass-listen/internals/thread_pool.rb:6:in `block in add'
+*/
+body:before {
   white-space: pre;
-  white-space: pre-wrap;
-  word-wrap: break-word; }
-
-q {
-  quotes: "\201C" "\201D" "\2018" "\2019"; }
-
-q:before, q:after {
-  content: '';
-  content: none; }
-
-small {
-  font-size: 80%; }
-
-sub,
-sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline; }
-
-sup {
-  top: -0.5em; }
-
-sub {
-  bottom: -0.25em; }
-
-img {
-  border: 0; }
-
-svg:not(:root) {
-  overflow: hidden; }
-
-figure {
-  margin: 0; }
-
-fieldset {
-  border: 1px solid #c0c0c0;
-  margin: 0 2px;
-  padding: 0.35em 0.625em 0.75em; }
-
-legend {
-  border: 0;
-  padding: 0;
-  white-space: normal; }
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-  font-size: 100%;
-  margin: 0;
-  vertical-align: baseline; }
-
-button, input {
-  line-height: normal; }
-
-button,
-select {
-  text-transform: none; }
-
-button,
-html input[type="button"],
-input[type="reset"],
-input[type="submit"] {
-  -webkit-appearance: button;
-  cursor: pointer; }
-
-button[disabled],
-input[disabled] {
-  cursor: default; }
-
-button::-moz-focus-inner, input::-moz-focus-inner {
-  border: 0;
-  padding: 0; }
-
-textarea {
-  overflow: auto;
-  vertical-align: top; }
-
-table {
-  border-collapse: collapse;
-  border-spacing: 0; }
-
-input[type="search"] {
-  -webkit-appearance: textfield;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box; }
-  input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
-    -webkit-appearance: none; }
-input[type="checkbox"], input[type="radio"] {
-  box-sizing: border-box;
-  padding: 0; }
-
-body {
-  font-size: 1em;
-  line-height: 1.4;
-  color: #37474F;
-  font-family: 'Ubuntu', sans-serif; }
-
-body,
-html {
-  margin: 0;
-  padding: 0;
-  height: 100%; }
-
-ul {
-  margin: 0;
-  padding: 0; }
-
-html {
-  box-sizing: border-box;
-  -ms-overflow-style: scrollbar; }
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit; }
-
-@font-face {
-  font-family: "untitled-font-1";
-  src: url("fonts/untitled-font-1.eot");
-  src: url("fonts/untitled-font-1.eot?#iefix") format("embedded-opentype"), url("fonts/untitled-font-1.woff") format("woff"), url("fonts/untitled-font-1.ttf") format("truetype"), url("fonts/untitled-font-1.svg#untitled-font-1") format("svg");
-  font-weight: normal;
-  font-style: normal; }
-[data-icon]:before {
-  font-family: "untitled-font-1" !important;
-  content: attr(data-icon);
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
-
-[class^="icon-"]:before,
-[class*=" icon-"]:before {
-  font-family: "untitled-font-1" !important;
-  font-style: normal !important;
-  font-weight: normal !important;
-  font-variant: normal !important;
-  text-transform: none !important;
-  speak: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; }
-
-.icon-pencil-square-o:before {
-  content: "\61"; }
-
-.icon-cog:before {
-  content: "\62"; }
-
-.icon-paper-plane:before {
-  content: "\63"; }
-
-.messenger {
-  display: flex;
-  flex-direction: column; }
-  .messenger .header {
-    line-height: 50px;
-    display: flex;
-    height: 50px;
-    background: linear-gradient(to right, blueviolet, #FF3D00);
-    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-    color: #E1F5FE;
-    position: relative; }
-    .messenger .header .left {
-      width: 200px;
-      position: relative; }
-      .messenger .header .left button {
-        outline: none;
-        background: none;
-        border: none;
-        color: #ffffff;
-        height: 50px;
-        font-size: 1.5rem; }
-      .messenger .header .left .left-action,
-      .messenger .header .left .right-action {
-        position: absolute;
-        top: 2px; }
-      .messenger .header .left .left-action {
-        left: 0; }
-      .messenger .header .left .right-action {
-        right: 0; }
-      .messenger .header .left .actions {
-        padding: 0 10px;
-        text-align: center; }
-    .messenger .header .content {
-      flex-grow: 1; }
-      .messenger .header .content .toolbar {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        padding: 0 10px; }
-        .messenger .header .content .toolbar span {
-          display: inline-block;
-          margin: 10px 5px;
-          height: 30px;
-          padding: 0 10px;
-          line-height: 30px;
-          border-radius: 8px;
-          background: #03A9F4;
-          cursor: pointer; }
-      .messenger .header .content h2 {
-        margin: 0;
-        text-align: center; }
-      .messenger .header .content input {
-        height: 2rem;
-        margin-top: 9px; }
-      .messenger .header .content .search-user {
-        position: relative;
-        z-index: 2;
-        background: #fff;
-        line-height: 50px; }
-        .messenger .header .content .search-user .name {
-          color: #37474F; }
-        .messenger .header .content .search-user .user {
-          display: flex; }
-        .messenger .header .content .search-user img {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          margin-top: 10px;
-          margin-right: 10px; }
-    .messenger .header .right {
-      width: 300px; }
-      .messenger .header .right .user-bar {
-        padding: 0 10px; }
-        .messenger .header .right .user-bar .name {
-          padding-right: 10px; }
-        .messenger .header .right .user-bar .user-info {
-          display: flex; }
-        .messenger .header .right .user-bar .avatar {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          overflow: hidden;
-          margin-top: 10px;
-          margin-right: 10px; }
-          .messenger .header .right .user-bar .avatar img {
-            width: 100%;
-            height: 100%; }
-        .messenger .header .right .user-bar button {
-          border: 0;
-          background: #03A9F4;
-          color: inherit;
-          padding: 0 20px;
-          line-height: 30px;
-          height: 30px;
-          margin: 10px 10px;
-          border-radius: 15px;
-          outline: none; }
-        .messenger .header .right .user-bar .user-form {
-          color: #37474F;
-          width: 350px;
-          line-height: 30px;
-          position: absolute;
-          right: 0px;
-          padding: 0 25px;
-          background: #fff;
-          border: 2px solid #FF3D00;
-          border-radius: 8px; }
-          .messenger .header .right .user-bar .user-form .form-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 10px 0; }
-            .messenger .header .right .user-bar .user-form .form-item input {
-              height: 30px;
-              width: 200px; }
-          .messenger .header .right .user-bar .user-form .form-actions {
-            display: flex;
-            justify-content: center; }
-          .messenger .header .right .user-bar .user-form button {
-            color: #fff;
-            padding: 0 10px;
-            margin: 20px 5px; }
-          .messenger .header .right .user-bar .user-form p {
-            color: #FF3D00; }
-          .messenger .header .right .user-bar .user-form .space {
-            height: 30px;
-            width: 100%;
-            margin: 1rem; }
-        .messenger .header .right .user-bar .user-menu {
-          position: absolute;
-          background: #fff;
-          top: 48px;
-          border: 2px solid #03A9F4; }
-          .messenger .header .right .user-bar .user-menu h2 {
-            color: #37474F;
-            text-align: center; }
-          .messenger .header .right .user-bar .user-menu li {
-            background: #fff;
-            border: 1px solid #f1f1f1; }
-            .messenger .header .right .user-bar .user-menu li:hover {
-              background: rgba(0, 0, 0, 0.1); }
-          .messenger .header .right .user-bar .user-menu button {
-            background: none;
-            border-radius: none;
-            color: #384850;
-            margin: 0;
-            width: 100%;
-            height: 100%; }
-  .messenger .main {
-    display: flex;
-    overflow-y: hidden;
-    height: 100%; }
-    .messenger .main .sidebar-left {
-      border-right: 2px solid rgba(0, 0, 0, 0.05);
-      width: 200px; }
-    .messenger .main .sidebar-right {
-      padding: 0.8rem;
-      border-left: 2px solid rgba(0, 0, 0, 0.05);
-      width: 300px; }
-      .messenger .main .sidebar-right .title {
-        margin-bottom: 0.5rem; }
-    .messenger .main .content {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column; }
-
-.messages-list {
-  background: #EEEEEE;
-  padding: 20px 50px;
-  flex-grow: 1;
-  overflow-y: auto; }
-  .messages-list .message {
-    display: flex;
-    position: relative;
-    padding: 10px 20px;
-    background: #ffffff;
-    box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
-    border-radius: 4px;
-    max-width: 100%; }
-    .messages-list .message pre {
-      font-family: "Microsoft Yahei", Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace; }
-    .messages-list .message.me .message-author {
-      color: #03A9F4; }
-    .messages-list .message .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden;
-      position: absolute;
-      left: -20px;
-      top: 5px; }
-      .messages-list .message .avatar img {
-        width: 100%; }
-    .messages-list .message .message-main {
-      width: 100%; }
-    .messages-list .message .message-info {
-      width: 100%;
-      display: flex;
-      line-height: 1.1;
-      justify-content: space-between;
-      padding: 5px; }
-    .messages-list .message .send-time {
-      font-size: 0.7rem;
-      color: #bdbdbd; }
-    .messages-list .message .message-main {
-      margin-left: 0.5rem; }
-    .messages-list .message .message-author {
-      font-size: 0.8rem;
-      color: #757575; }
-    .messages-list .message .message-text {
-      border-top: 1px solid #03A9F4;
-      padding: 0.5rem 0; }
-      .messages-list .message .message-text p {
-        margin: 0; }
-
-.messenger-input {
-  min-height: 50px;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap; }
-  .messenger-input .text-input {
-    flex-grow: 1; }
-    .messenger-input .text-input textarea {
-      border: 0;
-      width: 100%;
-      height: 100%;
-      padding: 0.5rem;
-      resize: none; }
-  .messenger-input .actions .send {
-    background: #03A9F4;
-    color: #fff;
-    border: none;
-    padding: 0.6rem 1rem;
-    height: 100%; }
-
-.channels {
-  overflow-y: auto;
-  height: 100%; }
-  .channels .channel {
-    padding: 0.5rem 0.8rem;
-    display: flex;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
-    transition: 0.3s; }
-    .channels .channel.active {
-      background: #03A9F4;
-      color: #ffffff; }
-      .channels .channel.active p {
-        color: #ffffff !important; }
-    .channels .channel .channel-image {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      overflow: hidden; }
-      .channels .channel .channel-image img {
-        width: 100%; }
-    .channels .channel .channel-info {
-      overflow: hidden;
-      flex-grow: 1;
-      padding: 0 0.5rem; }
-      .channels .channel .channel-info h2 {
-        font-size: 14px;
-        font-weight: 600;
-        margin: 0; }
-      .channels .channel .channel-info p {
-        margin: 0;
-        color: #bdbdbd;
-        font-size: 0.75rem; }
-
-.members {
-  display: flex; }
-  .members .member .member-avatar {
-    width: 30px;
-    height: 30px; }
-    .members .member .member-avatar img {
-      width: 100%; }
-  .members .member .member-info {
-    display: none; }
-  .members .member + .member {
-    margin-left: 0.5rem; }
-
-/*# sourceMappingURL=App.css.map */
+  font-family: monospace;
+  content: "Error: Invalid CSS after \"                &\": expected \"{\", was \"}\"\A         on line 377 of partials/_modules.scss\A         from line 6 of App.scss\A \A 372:                             height: 50%;\A 373:                         }\A 374:                     }\A 375:                 }\A 376:                 &\A 377:             }\A 378:         }\A 379:         .channel-info {\A 380:             overflow: hidden;\A 381:             flex-grow: 1;\A 382:             padding: 0 0.5rem;"; }

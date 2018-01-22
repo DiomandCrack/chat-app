@@ -204,6 +204,7 @@ export default class Store {
         //add user object
         const user = this.getCurrentUser();
         message.user = user
+        message.user.avatar = this.loadUserAvatar(user);
         this.messages = this.messages.set(id, message);
         //add new message id to channel
         const channelId = _.get(message, 'channelId');
@@ -323,8 +324,9 @@ export default class Store {
         }
         //login/logout-------------------------------------------
     setCurrentUser(user) {
-        user.avatar = `https://api.adorable.io/avatars/100/${user._id}.png`;
         this.user = user;
+        user.avatar = `https://api.adorable.io/avatars/100/${user._id}.png`;
+
         if (user) {
             localStorage.setItem('chatAppMe', JSON.stringify(user));
             //save this user to users collections in local

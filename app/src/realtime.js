@@ -31,14 +31,17 @@ export default class RealTime {
         return message;
     }
     readMessage(msg) {
-
+        const store = this.store;
+        const currentUser = store.getCurrentUser();
+        const currentUserId = _.toString(_.get(currentUser, '_id'));
         const message = this.decodeMessage(msg);
         const action = _.get(message, 'action', '');
         const payload = _.get(message, 'payload');
         switch (action) {
             case 'message_added':
                 {
-                    let notify = true;
+                    const activeChannel = store.getActiveChannel();
+                    let notify = _.get(activeChannel,'_id') !== _.get(payload,'channelId') && currentUserId !== _.get(payload,'userId');
                     this.onAddMessage(payload,notify);
                     break;
                 }
