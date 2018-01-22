@@ -90,6 +90,7 @@ class AppRouter {
                             title: true,
                             lastMessage: true,
                             created: true,
+                            updated: true,
                             members: true,
                             users: {
                                 _id: true,
@@ -100,8 +101,8 @@ class AppRouter {
                     },
                     {
                         $sort: {
+                            update: -1,
                             created: -1,
-
                         }
                     },
                     {

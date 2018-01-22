@@ -31,31 +31,15 @@ export default class RealTime {
         return message;
     }
     readMessage(msg) {
-        const store = this.store;
-        const currentUser = store.getCurrentUser();
-        const currentUserId = _.toString(_.get(currentUser, '_id'));
+
         const message = this.decodeMessage(msg);
         const action = _.get(message, 'action', '');
         const payload = _.get(message, 'payload');
         switch (action) {
             case 'message_added':
                 {
-                    const user = _.get(payload, 'user');
-                    //add user to cache
-                    store.addUserToCache(user);
-
-                    const messageObject = {
-                        _id: _.get(payload, '_id'),
-                        main: _.get(payload, 'main', ''),
-                        userId: _.get(payload, 'userId'),
-                        channelId: _.get(payload, 'channelId'),
-                        created: _.get(payload, 'created', new Date()),
-                        me: currentUserId === _.toString(_.get(payload, 'userId')),
-                        user,
-                    };
-                    console.log('messageObject', messageObject);
-                    store.setMessageToCache(messageObject);
-
+                    
+                    this.onAddMessage(payload);
                     break;
                 }
             case 'channel_added':
@@ -66,6 +50,27 @@ export default class RealTime {
             default:
                 break;
         }
+    }
+    onAddMessage(payload){
+        const user = _.get(payload, 'user');
+        //add user to cache
+        const store = this.store;
+        const currentUser = store.getCurrentUser();
+        const currentUserId = _.toString(_.get(currentUser, '_id'));
+        store.addUserToCache(user);
+
+        const messageObject = {
+            _id: _.get(payload, '_id'),
+            main: _.get(payload, 'main', ''),
+            userId: _.get(payload, 'userId'),
+            channelId: _.get(payload, 'channelId'),
+            created: _.get(payload, 'created', new Date()),
+            me: currentUserId === _.toString(_.get(payload, 'userId')),
+            user,
+        };
+        console.log('messageObject', messageObject);
+        
+        store.setMessageToCache(messageObject);
     }
     onAddChannel(payload) {
 
@@ -80,7 +85,7 @@ export default class RealTime {
             lastMessage: _.get(payload, 'lastMessage'),
             members: new OrderedMap(),
             messages: new OrderedMap(),
-            created: Date.now(),
+            created: new Date(),
             userId,
             isNew: false,
         };
@@ -89,7 +94,15 @@ export default class RealTime {
             const memberId = `${user._id}`;
             store.addUserToCache(user);
             channel.members = channel.members.set(memberId, true);
-        })
+        });
+        const channelMessages = store.messages.filter((member)=>{
+           _.toString(member.channelId = channelId); 
+        });
+
+        channelMessages.forEach((msg)=>{
+            const msgId = _.toString(_.get(msg,'_id'));
+            channel.messages = channel.messages.set(msgId,true);
+        });
         store.addChannel(channelId, channel);
     }
     send(message = {}) {

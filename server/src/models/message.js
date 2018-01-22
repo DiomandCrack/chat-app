@@ -22,6 +22,13 @@ class Message {
             app.db.collection('messages').insertOne(message, (err, info) => {
 
                 if (!err) {
+                    //let update lastMessage field to channel
+                    app.db.collection('channels').findOneAndUpdate({ _id: channelId }, {
+                        $set: {
+                            lastMessage: _.get(message, 'main', ''),
+                            updated: new Date(),
+                        }
+                    });
                     app.models.user.load(_.toString(userId)).then((user) => {
                         _.unset(user, 'password');
                         _.unset(user, 'email');

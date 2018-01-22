@@ -162,6 +162,7 @@ export default class Store {
         const channel = this.channels.get(channelId);
         if (channel) {
             channel.messages = channel.messages.set(id, true);
+            channel.lastMessage = _.get(message, 'main', '');
         } else {
             //fetch to the server with channel info
             this.service.get(`api/channels/${channelId}`).then((response) => {
@@ -236,7 +237,7 @@ export default class Store {
     getChannels() {
 
         // need sort channels by created
-        this.channels = this.channels.sort((a, b) => b.created - a.created)
+        this.channels = this.channels.sort((a, b) => a.updated - b.updated);
         return this.channels.valueSeq();
     }
 
