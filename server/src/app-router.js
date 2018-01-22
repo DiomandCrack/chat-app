@@ -125,6 +125,30 @@ class AppRouter {
             });
         });
         /*
+        @endpoint: /api/me/channels/:id/messages
+        @method:GET
+        */
+        app.get('/api/channels/:id/messages', (req, res, next) => {
+            //make sure user are logged in
+            //check if this user is inside of channel members,other return 401
+            let filter = _.get(req, 'query.filter', null);
+            if (filter) {
+                filter = JSON.parse(filter);
+            }
+            const channelId = _.get(req, 'params.id');
+            const limit = _.get(filter, 'limit', 50);
+            const offset = _.get(filter, 'offset', 0);
+
+            this.app.models.message.getChannelMessages(channelId, limit, offset).then((messages) => {
+                return res.status(200).json(messages);
+            }).catch((err) => {
+                return res.status(404).json({
+
+                    err: { message: 'not found' }
+                });
+            });
+        });
+        /*
         @endpoint:/api/users/search
         @method:POST
         */

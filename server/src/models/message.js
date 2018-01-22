@@ -6,6 +6,60 @@ class Message {
         this.app = app;
         this.messages = new OrderedMap();
     }
+    getChannelMessages(channelId, limit = 50, offset = 0) {
+        return new Promise((resolve, reject) => {
+            channelId = new ObjectID(channelId);
+            // this.app.db.collection('messages').find({ channelId }).skip(offset).limit(limit).toArray((err, messages) => {
+            //     return err ? reject(err) : resolve(messages);
+            // });
+            const query = [{
+                    $lookup: {
+                        from: 'users',
+                        localField: 'userId',
+                        foreignField: '_id',
+                        as: 'user',
+                    }
+                },
+                {
+                    $match: {
+                        channelId: {
+                            $eq: channelId,
+                        }
+                    }
+                },
+                {
+                    $project: {
+                        _id: true,
+                        channelId: true,
+                        user: {
+                            _id: true,
+                            name: true,
+                            created: true,
+                        },
+                        userId: true,
+                        main: true,
+                        created: true,
+
+                    }
+                },
+                {
+                    $limit: limit,
+                },
+                {
+                    $skip: offset,
+                },
+                {
+                    $sort: {
+                        created: 1
+                    }
+                }
+            ];
+            this.app.db.collection('messages').aggregate(query, (err, messages) => {
+                console.log(err);
+                return err ? reject(err) : resolve(messages);
+            });
+        });
+    }
     create(obj) {
         return new Promise((resolve, reject) => {
             const id = _.toString(_.get(obj, '_id', null));

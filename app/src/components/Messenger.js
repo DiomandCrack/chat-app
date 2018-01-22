@@ -199,7 +199,7 @@ export default class Messenger extends Component {
             </div>
         ))
         const channelsList = channels.map((channel,i) => (
-            <div className={classNames('channel',{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
+            <div className={classNames('channel',{'notify':_.get(channel,'notify')},{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
                  key={channel._id} 
                  onClick={()=>{
                 store.setActiveChannelId(channel._id)

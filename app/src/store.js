@@ -18,9 +18,9 @@ export default class Store {
             users: new OrderedMap(),
         }
         this.realTime = new RealTime(this);
-        this.fetchUserChannel();
+        this.fetchUserChannels();
     }
-    fetchUserChannel() {
+    fetchUserChannels() {
         const userToken = this.getUserToken();
 
         if (userToken) {
@@ -34,6 +34,10 @@ export default class Store {
                 _.each(channels, (channel) => {
                     this.realTime.onAddChannel(channel);
                 });
+
+                const firstChannel = _.get(channels, '[0]._id', null);
+                this.fetchChannelMessages(firstChannel);
+
             }).catch(err => {
                 console.log('An err fetching user channels', err);
             });
@@ -124,7 +128,7 @@ export default class Store {
             channel.members.forEach((item, i) => {
                 const userId = `${i}`;
                 const member = this.users.get(userId)
-                if (this.user._id !== member._id) {
+                if (this.user || this.user._id !== member._id) {
                     members = members.set(i, member)
                 }
             })
@@ -141,9 +145,26 @@ export default class Store {
 
     setActiveChannelId(id) {
         this.activeChannelId = id;
+
+        this.fetchChannelMessages(id);
+
         this.update();
     }
-
+    fetchChannelMessages(channelId) {
+        let channel = this.channels.get(channelId);
+        if (channel && !_.get(channel, 'isFetchedMessages')) {
+            this.service.get(`api/channels/${channelId}/messages`).then((response) => {
+                channel.isFetchedMessages = true;
+                const messages = response.data;
+                _.each(messages, (message) => {
+                    this.realTime.onAddMessage(message);
+                });
+                this.channels = this.channels.set(channelId, channel);
+            }).catch((err) => {
+                console.log('fetchChannelMessage', err);
+            });
+        }
+    }
     getMessagesFromChannel(channel) {
         let messages = new OrderedMap();
 
@@ -155,7 +176,7 @@ export default class Store {
         }
         return messages.valueSeq()
     }
-    setMessageToCache(message) {
+    setMessageToCache(message, notify = false) {
         const id = _.toString(_.get(message, '_id'));
         this.messages = this.messages.set(id, message);
         const channelId = _.toString(_.get(message, 'channelId'));
@@ -163,6 +184,8 @@ export default class Store {
         if (channel) {
             channel.messages = channel.messages.set(id, true);
             channel.lastMessage = _.get(message, 'main', '');
+            channel.notify = notify;
+            this.channels = this.channels.set(channelId, channel);
         } else {
             //fetch to the server with channel info
             this.service.get(`api/channels/${channelId}`).then((response) => {
@@ -336,6 +359,7 @@ export default class Store {
                 //fecthing user channel
 
                 // console.log('Got user login callback from the server', accessToken);
+                this.fetchUserChannels();
 
             }).catch((err) => {
                 console.log("Got an error login from server", err)
@@ -367,12 +391,19 @@ export default class Store {
         // })
     }
 
+    clearCacheData() {
+        this.channels = this.channels.clear();
+        this.messages = this.messages.clear();
+        this.users = this.users.clear();
+    }
+
     signOut() {
         const userId = `${_.get(this.user,'_id',null)}`;
 
         this.user = null;
         localStorage.removeItem('chatAppMe');
         localStorage.removeItem('token');
+        this.clearCacheData();
         if (userId) {
             this.users = this.users.remove(userId);
         }

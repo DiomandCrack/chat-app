@@ -38,8 +38,8 @@ export default class RealTime {
         switch (action) {
             case 'message_added':
                 {
-                    
-                    this.onAddMessage(payload);
+                    let notify = true;
+                    this.onAddMessage(payload,notify);
                     break;
                 }
             case 'channel_added':
@@ -51,7 +51,7 @@ export default class RealTime {
                 break;
         }
     }
-    onAddMessage(payload){
+    onAddMessage(payload,notify=false){
         const user = _.get(payload, 'user');
         //add user to cache
         const store = this.store;
@@ -69,8 +69,7 @@ export default class RealTime {
             user,
         };
         console.log('messageObject', messageObject);
-        
-        store.setMessageToCache(messageObject);
+        store.setMessageToCache(messageObject,notify);
     }
     onAddChannel(payload) {
 
