@@ -131,10 +131,12 @@ class Connection {
                             this.send(connection.ws, obj);
 
                             //send to all socket clients connection
+                            const userIdString = _.toString(userId);
                             this.sendAll({
                                 action: 'user_online',
-                                payload: _.toString(userId),
+                                payload: userIdString
                             });
+                            this.app.models.user.updateUserStatus(userIdString, true);
 
                         }).catch(err => {
                             //send back to socket client not loggin
@@ -156,6 +158,7 @@ class Connection {
         }
 
     }
+
     decodeMessage(msg) {
         let messageObject = null;
         try {
@@ -210,6 +213,8 @@ class Connection {
                             action: 'user_offline',
                             payload: userId
                         });
+                        //update user status into database
+                        this.app.models.user.updateUserStatus(userId, false);
                     }
 
 

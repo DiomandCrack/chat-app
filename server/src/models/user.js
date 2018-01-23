@@ -28,7 +28,16 @@ class User {
             });
         });
     }
+    updateUserStatus(userId, isOnline = false) {
+        return new Promise((resolve, reject) => {
+            const query = { _id: new ObjectID(userId) };
+            const update = { $set: { online: isOnline } };
+            this.app.db.collection('users').update(query, update, (err, info) => {
+                return err ? reject(err) : resolve(info);
+            });
+        });
 
+    }
     find(query = {}, options = {}) {
         return new Promise((resolve, reject) => {
             this.app.db.collection('users').find(query, options).toArray((err, users) => {
