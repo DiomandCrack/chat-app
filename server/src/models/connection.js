@@ -129,6 +129,13 @@ class Connection {
                                 payload: 'verified',
                             }
                             this.send(connection.ws, obj);
+
+                            //send to all socket clients connection
+                            this.sendAll({
+                                action: 'user_online',
+                                payload: _.toString(userId),
+                            });
+
                         }).catch(err => {
                             //send back to socket client not loggin
                             const obj = {
@@ -159,7 +166,14 @@ class Connection {
         }
         return messageObject;
     }
+    sendAll(obj) {
+        //send socket messages to all clients.
 
+        this.connections.forEach((connection, key) => {
+            const ws = connection.ws;
+            this.send(ws, obj);
+        });
+    }
     modelDidload() {
 
         this.app.wss.on('connection', (ws) => {
@@ -174,7 +188,7 @@ class Connection {
             this.connections = this.connections.set(socketId, clientConnection);
             ws.on('message', (msg) => {
 
-                ws.send('the ID:' + socketId)
+                ws.send('the ID:' + socketId);
                 const message = this.decodeMessage(msg);
                 this.work(socketId, message);
                 console.log("SERVER:message from a client", message);
@@ -183,7 +197,23 @@ class Connection {
             ws.on('close', () => {
                 // console.log('someone disconnected to the server', sokectId)
                 //remove this socket from cache connection
+                const closeConnection = this.connections.get(socketId);
+                const userId = _.get(closeConnection, 'userId', null);
                 this.connections = this.connections.remove(socketId);
+
+                if (userId) {
+                    //now find all socket clients matching with userId
+                    const userConnections = this.connections.filter((connection) => _.toString(_.get(connection, 'userId')) === userId);
+                    //no more socket clients is online with this userId. now user is offline
+                    if (userConnections.size === 0) {
+                        this.sendAll({
+                            action: 'user_offline',
+                            payload: userId
+                        });
+                    }
+
+
+                }
             })
         });
     }

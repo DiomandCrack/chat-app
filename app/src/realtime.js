@@ -38,11 +38,22 @@ export default class RealTime {
         const action = _.get(message, 'action', '');
         const payload = _.get(message, 'payload');
         switch (action) {
+            case 'user_offline':
+                {
+                    this.onUpdateUserStatus(payload, false);
+                    break;
+                }
+            case 'user_online':
+                {
+                    const isOnline = true;
+                    this.onUpdateUserStatus(payload, isOnline);
+                    break;
+                }
             case 'message_added':
                 {
                     const activeChannel = store.getActiveChannel();
-                    let notify = _.get(activeChannel,'_id') !== _.get(payload,'channelId') && currentUserId !== _.get(payload,'userId');
-                    this.onAddMessage(payload,notify);
+                    let notify = _.get(activeChannel, '_id') !== _.get(payload, 'channelId') && currentUserId !== _.get(payload, 'userId');
+                    this.onAddMessage(payload, notify);
                     break;
                 }
             case 'channel_added':
@@ -54,7 +65,20 @@ export default class RealTime {
                 break;
         }
     }
-    onAddMessage(payload,notify=false){
+    onUpdateUserStatus(userId, isOnline = false) {
+        const store = this.store;
+        // user.online = isOnline;
+        // this.users = this.users.get(userId, user);
+        store.users = store.users.update(userId, (user) => {
+            if (user) {
+                user.online = isOnline;
+            }
+
+            return user;
+        });
+        store.update();
+    };
+    onAddMessage(payload, notify = false) {
         const user = _.get(payload, 'user');
         //add user to cache
         const store = this.store;
@@ -72,7 +96,7 @@ export default class RealTime {
             user,
         };
         console.log('messageObject', messageObject);
-        store.setMessageToCache(messageObject,notify);
+        store.setMessageToCache(messageObject, notify);
     }
     onAddChannel(payload) {
 
@@ -97,13 +121,13 @@ export default class RealTime {
             store.addUserToCache(user);
             channel.members = channel.members.set(memberId, true);
         });
-        const channelMessages = store.messages.filter((member)=>{
-           _.toString(member.channelId = channelId); 
+        const channelMessages = store.messages.filter((member) => {
+            _.toString(member.channelId = channelId);
         });
 
-        channelMessages.forEach((msg)=>{
-            const msgId = _.toString(_.get(msg,'_id'));
-            channel.messages = channel.messages.set(msgId,true);
+        channelMessages.forEach((msg) => {
+            const msgId = _.toString(_.get(msg, '_id'));
+            channel.messages = channel.messages.set(msgId, true);
         });
         store.addChannel(channelId, channel);
     }

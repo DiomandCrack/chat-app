@@ -209,8 +209,10 @@ export default class Store {
     addMessage(id, message = {}) {
         //add user object
         const user = this.getCurrentUser();
-        message.user = user
-        message.user.avatar = this.loadUserAvatar(user);
+        if (user) {
+            message.user = user;
+            message.user.avatar = this.loadUserAvatar(user);
+        }
         this.messages = this.messages.set(id, message);
         //add new message id to channel
         const channelId = _.get(message, 'channelId');
@@ -275,7 +277,9 @@ export default class Store {
         this.app.forceUpdate();
     }
     loadUserAvatar(user) {
-        return `https://api.adorable.io/avatars/100/${user._id}.png`;
+        if (user) {
+            return `https://api.adorable.io/avatars/100/${user._id}.png`;
+        }
     }
     startSearchUsersFromServer(q = '') {
         //query to backend server and get list of users;

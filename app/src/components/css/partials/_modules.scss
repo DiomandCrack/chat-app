@@ -429,6 +429,9 @@
             img {
                 width: 100%;
             }
+            &.offline {
+                filter: grayscale(100%);
+            }
         }
         .member-info {
             display: none;

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import moment from 'moment'
-import avatar from './files/img/avatar.png'
 import classNames from 'classnames'
 import {OrderedMap} from 'immutable'
 import {ObjectID} from '../helpers/objectId'
@@ -42,7 +41,6 @@ export default class Messenger extends Component {
                 _id: channelId,
                 title:``,
                 lastMessage:``,
-                avatar,
                 members:new OrderedMap(),
                 messages:new OrderedMap(),
                 created:Date.now(),
@@ -88,7 +86,7 @@ export default class Messenger extends Component {
         const maxDisplay = 4;
         const total = members.size>maxDisplay?maxDisplay:members.size;
         const avatars = members.map((user,index)=>{
-            return index<maxDisplay ? <img src={_.get(user,'avatar')} alt={_.get(user,'name')}/>:null;
+            return index<maxDisplay ? <img src={_.get(user,'avatar')} key={index} alt={_.get(user,'name')}/>:null;
         });
         
         return <div className={classNames('channel-avatars',`channel-avatars-${total}`)}>{avatars}</div>;
@@ -209,7 +207,7 @@ export default class Messenger extends Component {
             </div>
         ))
         const channelsList = channels.map((channel,i) => (
-            <div className={classNames('channel',{'notify':_.get(channel,'notify-')},{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
+            <div className={classNames('channel',{'notify':_.get(channel,'notify')},{'active':_.get(activeChannel,'_id')=== _.get(channel,'_id')})} 
                  key={channel._id} 
                  onClick={()=>{
                 store.setActiveChannelId(channel._id)
@@ -224,17 +222,21 @@ export default class Messenger extends Component {
             </div>
         ))
 
-        let membersList = members.map((member) => (
-            <div className='member' key={member._id}>
-                <div className='member-avatar'>
-                    <img src={member.avatar} alt=''/>
-                </div>
-                <div className='member-info'>
-                    <h2>{member.name}</h2>
-                    <p>joined:{moment(member.created).fromNow()}</p>
-                </div>
-            </div>
-        ))
+        const membersList = members.map((member) => {
+            const isOnline = _.get(member,'online',false);
+            return (<div className='member' key={member._id}>
+                        <div className={classNames('member-avatar',{
+                            'offline':!isOnline
+                        })}>
+                            <img src={member.avatar} alt=''/>
+                        </div>
+                        <div className='member-info'>
+                            <h2>{member.name}</h2>
+                            <p>joined:{moment(member.created).fromNow()}</p>
+                        </div>
+                    </div>
+                )
+        })
         return(
             <div style={style} className='messenger'>
                 <div className='header'>

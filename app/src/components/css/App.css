@@ -587,6 +587,8 @@ html {
     height: 30px; }
     .members .member .member-avatar img {
       width: 100%; }
+    .members .member .member-avatar.offline {
+      filter: grayscale(100%); }
   .members .member .member-info {
     display: none; }
   .members .member + .member {
