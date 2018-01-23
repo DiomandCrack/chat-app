@@ -17,7 +17,10 @@ class Channel {
                 return resolve(channelFromCache);
             }
             //find in db
-            this.findById(id).then((channel) => resolve(channel)).catch(err => reject(err));
+            this.findById(id).then((channel) => {
+                this.channels = this.channels.set(id, channel);
+                return resolve(channel);
+            }).catch(err => reject(err));
         });
 
     }

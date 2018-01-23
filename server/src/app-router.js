@@ -129,24 +129,61 @@ class AppRouter {
         @method:GET
         */
         app.get('/api/channels/:id/messages', (req, res, next) => {
-            //make sure user are logged in
-            //check if this user is inside of channel members,other return 401
-            let filter = _.get(req, 'query.filter', null);
-            if (filter) {
-                filter = JSON.parse(filter);
+            let tokenId = req.get('authorization');
+            if (!tokenId) {
+                //get token from query
+                tokenId = _.get(req, 'query.auth');
             }
-            const channelId = _.get(req, 'params.id');
-            const limit = _.get(filter, 'limit', 50);
-            const offset = _.get(filter, 'offset', 0);
+            app.models.token.loadTokenAndUser(tokenId).then((token) => {
+                const userId = token.userId;
+                //make sure user are logged in
+                //check if this user is inside of channel members,other return 401
+                let filter = _.get(req, 'query.filter', null);
+                if (filter) {
+                    filter = JSON.parse(filter);
+                }
+                const channelId = _.get(req, 'params.id');
+                const limit = _.get(filter, 'limit', 50);
+                const offset = _.get(filter, 'offset', 0);
 
-            this.app.models.message.getChannelMessages(channelId, limit, offset).then((messages) => {
-                return res.status(200).json(messages);
+                //load channel
+                this.app.models.channel.load(channelId).then((channel) => {
+                    // console.log('channel', channel);
+                    const memberIds = _.get(channel, 'members');
+                    const members = [];
+                    _.each(memberIds, (id) => {
+                        members.push(_.toString(id));
+                    });
+                    if (!_.includes(members, _.toString(userId))) {
+                        return res.status('401').json({
+                            error: {
+                                message: "Access denied"
+                            }
+                        });
+                    }
+                    this.app.models.message.getChannelMessages(channelId, limit, offset).then((messages) => {
+                        return res.status(200).json(messages);
+                    }).catch((err) => {
+                        return res.status(404).json({
+
+                            err: { message: 'not found' }
+                        });
+                    });
+                }).catch((err) => {
+                    return res.status(404).json({
+                        err: { message: 'not found' }
+                    });
+                });
+
             }).catch((err) => {
-                return res.status(404).json({
-
-                    err: { message: 'not found' }
+                return res.status(401).json({
+                    err: {
+                        message: 'Access denied'
+                    }
                 });
             });
+
+
         });
         /*
         @endpoint:/api/users/search
