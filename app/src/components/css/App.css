@@ -326,7 +326,12 @@ html {
     .messenger .header .right {
       width: 300px; }
       .messenger .header .right .user-bar {
+        display: flex;
         padding: 0 10px; }
+        .messenger .header .right .user-bar .app-warning-state {
+          font-size: 10px;
+          padding: 0 10px;
+          color: #FF3D00; }
         .messenger .header .right .user-bar .name {
           padding-right: 10px; }
         .messenger .header .right .user-bar .user-info {

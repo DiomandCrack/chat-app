@@ -8,6 +8,7 @@ export default class RealTime {
         this.isConnected = false;
 
         this.connect();
+        this.reconnect();
     }
     authentication() {
         const store = this.store;
@@ -19,6 +20,16 @@ export default class RealTime {
         if (tokenId) {
             this.send(message);
         }
+
+    }
+    reconnect() {
+        const store = this.store;
+        window.setInterval(() => {
+            const user = store.getCurrentUser();
+            if (user && !this.isConnected) {
+                this.connect();
+            }
+        }, 3000);
 
     }
     decodeMessage(msg) {
@@ -153,8 +164,14 @@ export default class RealTime {
             }
         }
         this.ws.onclose = () => {
-            console.log('You disconnected');
+            // console.log('You disconnected');
             this.isConnected = false;
+            this.store.update();
+
+        }
+        ws.onerror = () => {
+            this.isConnected = false;
+            this.store.update();
         }
     }
 }

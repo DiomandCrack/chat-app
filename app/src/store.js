@@ -150,6 +150,9 @@ export default class Store {
 
         this.update();
     }
+    isConnected() {
+        return this.realTime.isConnected;
+    }
     fetchChannelMessages(channelId) {
         let channel = this.channels.get(channelId);
         if (channel && !_.get(channel, 'isFetchedMessages')) {
@@ -422,4 +425,5 @@ export default class Store {
 
         this.update();
     }
+
 }

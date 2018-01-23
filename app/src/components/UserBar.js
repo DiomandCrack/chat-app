@@ -24,11 +24,13 @@ render(){
     const {store} = this.props;
     const me = store.getCurrentUser()
     // console.log(me)
+    const isConnected = store.isConnected();
     const avatar = _.get(me,'avatar')
     const {showLoginForm,showMyAccount} = this.state
     return(
 
         <div className='user-bar'>
+            {me && !isConnected ? <div className='app-warning-state'>Reconnecting</div>:null}
             {me?
             (
                 <div className='user-info' onClick={(e)=>this.handleShowAccount(e,true)}>
