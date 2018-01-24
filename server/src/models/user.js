@@ -30,6 +30,13 @@ class User {
     }
     updateUserStatus(userId, isOnline = false) {
         return new Promise((resolve, reject) => {
+            //first update status of cache this users
+            this.users = this.users.update(userId, (user) => {
+                if (user) {
+                    user.online = isOnline;
+                }
+                return user
+            });
             const query = { _id: new ObjectID(userId) };
             const update = { $set: { online: isOnline } };
             this.app.db.collection('users').update(query, update, (err, info) => {

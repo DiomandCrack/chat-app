@@ -127,9 +127,10 @@ export default class Store {
         if (channel) {
             channel.members.forEach((item, i) => {
                 const userId = `${i}`;
-                const member = this.users.get(userId)
-                if (this.user || this.user._id !== member._id) {
-                    members = members.set(i, member)
+                const member = this.users.get(userId);
+                const loggedUser = this.getCurrentUser();
+                if (_.get(loggedUser, '_id') !== _.get(member, '_id')) {
+                    members = members.set(i, member);
                 }
             })
         }
@@ -255,7 +256,6 @@ export default class Store {
     }
 
     addUserToChannel(channelId, userId) {
-        console.log(channelId, userId);
         const channel = this.channels.get(channelId);
         if (channel) {
             //add this member to channel
@@ -350,7 +350,14 @@ export default class Store {
 
         this.update();
     }
-
+    register(user) {
+        return new Promise((resolve, reject) => {
+            this.service.post('api/users', user).then((res) => {
+                console.log('user created', res.data);
+                return resolve(res.data);
+            }).catch(err => reject({ message: 'An err create your account' }));
+        });
+    }
     login(email = null, password = null) {
         const userEmail = _.toLower(email)
 

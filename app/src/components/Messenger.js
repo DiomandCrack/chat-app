@@ -223,11 +223,11 @@ export default class Messenger extends Component {
         ))
 
         const membersList = members.map((member) => {
-            const isOnline = _.get(member,'online',false);
+            const isOnline = _.get(member,'online',false)
             return (<div className='member' key={member._id}>
-                        <div className={classNames('member-avatar',{
-                            'offline':!isOnline
-                        })}>
+                        <div className={
+                            isOnline?'member-avatar':'member-avatar offline'
+                        }>
                             <img src={member.avatar} alt=''/>
                         </div>
                         <div className='member-info'>

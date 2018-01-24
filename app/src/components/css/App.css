@@ -361,6 +361,7 @@ html {
           width: 350px;
           line-height: 30px;
           position: absolute;
+          top: 50px;
           right: 0px;
           padding: 0 25px;
           background: #fff;
@@ -390,10 +391,14 @@ html {
           position: absolute;
           background: #fff;
           top: 48px;
-          border: 2px solid #03A9F4; }
-          .messenger .header .right .user-bar .user-menu h2 {
+          z-index: 999;
+          border: 2px solid #03A9F4;
+          width: 200px; }
+          .messenger .header .right .user-bar .user-menu h3 {
             color: #37474F;
-            text-align: center; }
+            text-align: center;
+            margin: 0;
+            font-weight: normal; }
           .messenger .header .right .user-bar .user-menu li {
             background: #fff;
             border: 1px solid #f1f1f1; }

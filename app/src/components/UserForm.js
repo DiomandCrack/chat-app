@@ -5,7 +5,9 @@ import classNames from 'classnames'
 export default class UserForm extends Component {
     state={
         message:null,
+        isLogin:true,
         user:{
+            name:'',
             email:'',
             password:'',
         }
@@ -25,13 +27,13 @@ export default class UserForm extends Component {
     handleOnSubmit=(e)=>{
         e.preventDefault()
         const {store} = this.props
-        const {user} = this.state
+        const {user,isLogin} = this.state
         const email=_.get(user,'email')
         const password = _.get(user,'password')
         this.setState({
             message:null,
         },()=>{
-            if( email && password){
+            if( isLogin && email && password){
             store.login(email,password).then((user)=>{
                 if(this.props.onShowLoginForm){
                     this.props.onShowLoginForm(e,false)
@@ -45,6 +47,23 @@ export default class UserForm extends Component {
                     }
                 })
             })
+        }else{
+            store.register(user).then(()=>{
+                this.setState({
+                    message:{
+                        main:'注册成功',
+                        type:'success'
+                    }
+                },()=>{
+                    //login this user
+                    store.login(_.get(user,'email'),_.get(user,'password')).then(()=>{
+                        if(this.props.onShowLoginForm){
+                            this.props.onShowLoginForm(e,false);
+                        }
+                    })
+                })
+
+            }).catch();
         }
         })
      
@@ -63,6 +82,7 @@ export default class UserForm extends Component {
     render(){
         const {message}=this.state
         const {user} = this.state
+        const {isLogin} = this.state
         return(
             <div className='user-form' ref={(form)=>{
                 this.form = form
@@ -71,11 +91,22 @@ export default class UserForm extends Component {
                 {message?<p className={classNames('login-message',
                             _.get(message,'type')
                         )}>{_.get(message,'main')}</p>:<div className='space'></div>}
+                    {!isLogin?<div className='form-item'>
+                        <label htmlFor="name">昵称</label>
+                        <input 
+                            type="text"
+                            placeholder="昵称"
+                            name="name"
+                            onChange={this.onTextChange}
+                        />
+                        </div>
+                        :null}
+
                     <div className='form-item'>
-                        <label htmlFor="emlai">Email</label>
+                        <label htmlFor="email">邮箱</label>
                         <input 
                             type="email"     
-                            placeholder="email" 
+                            placeholder="邮箱" 
                             name="email"
                             onChange={this.onTextChange}
                             value={_.get(user,'email')}
@@ -83,18 +114,25 @@ export default class UserForm extends Component {
                     </div>
 
                     <div className='form-item'>
-                        <label htmlFor="emlai">password</label>
+                        <label htmlFor="password">密码</label>
                         <input 
                             type="password"     
-                            placeholder="password" 
+                            placeholder="密码" 
                             name="password"
                             onChange={this.onTextChange}
                             value={_.get(user,'password')}
                         />
                     </div>
                     <div className='form-actions'>
-                        <button type='button'>Create an account</button>
-                        <button type='submit'>Sign In</button>
+                        {
+                            isLogin?<button type='button' onClick={
+                        ()=>{
+                            this.setState({
+                                isLogin:false,
+                            })
+                        }
+                        }>Create an account</button>:null}
+                        <button type='submit'>{isLogin?'登陆':'注册'}</button>
                     </div>
                 </form>
             </div>

@@ -127,6 +127,7 @@
                     width: 350px;
                     line-height: 30px;
                     position: absolute;
+                    top: 50px;
                     right: 0px;
                     padding: 0 25px;
                     background: #fff;
@@ -163,10 +164,14 @@
                     position: absolute;
                     background: #fff;
                     top: 48px;
+                    z-index: 999;
                     border: 2px solid $primary-color;
-                    h2 {
+                    width: 200px;
+                    h3 {
                         color: $body-font-color;
                         text-align: center;
+                        margin: 0;
+                        font-weight: normal;
                     }
                     li {
                         background: #fff;

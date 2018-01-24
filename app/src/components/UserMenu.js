@@ -23,21 +23,21 @@ export default class UserMenu extends Component {
     render() {
         return (
             <div className="user-menu" ref={(menu)=>this.menu=menu}>
-                <h2>My account</h2>
+                <h3>我的账户</h3>
                 <ul className='menu'>
                     <li>
                         <button type='button'>
-                            My profile
+                            个人资料
                         </button>
                     </li>
                     <li>
                         <button>
-                            Change passWord
+                            更改密码
                         </button>
                     </li>
                     <li>
                         <button onClick={(e)=>this.handleOnSignOut(e)}>
-                            Sign out
+                            退出
                         </button>
                     </li>
                 </ul>

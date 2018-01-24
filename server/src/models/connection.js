@@ -12,6 +12,59 @@ class Connection {
         const message = JSON.stringify(obj);
         ws.send(message);
     }
+    sendToMembers(userId, obj) {
+        const query = [{
+                $match: {
+                    members: {
+                        $all: [new ObjectID(userId)]
+                    }
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'members',
+                    foreginField: '_id',
+                    as: 'users'
+                }
+            },
+            {
+                $unwind: {
+                    path: '$users',
+                }
+            },
+            {
+                $match: {
+                    'users.online': { $eq: true }
+                },
+            },
+            {
+                $group: {
+                    _id: '$users._id'
+                }
+            }
+        ];
+        const users = [];
+        this.app.db.collection('channels').aggregate(query, (err, members) => {
+            if (err === null && members) {
+                _.each(members, (member) => {
+                    const userId = _.toString(_.get(member, '_id'));
+                    if (userId) {
+                        users.push(userId);
+                    }
+                });
+                //this is list of all connections is chatting with current user
+                const memberConnections = this.connections.filter((connection) => _.includes(users, _.toString(_.get(connection, 'userId'))));
+                if (memberConnections.size) {
+                    memberConnections.forEach((connection, key) => {
+
+                        const ws = connection.ws;
+                        this.send(ws, obj);
+                    });
+                }
+            }
+        });
+    }
     work(socketId, msg) {
         const action = _.get(msg, 'action');
         const payload = _.get(msg, 'payload');
@@ -132,7 +185,7 @@ class Connection {
 
                             //send to all socket clients connection
                             const userIdString = _.toString(userId);
-                            this.sendAll({
+                            this.sendToMembers(userIdString, {
                                 action: 'user_online',
                                 payload: userIdString
                             });
@@ -209,12 +262,12 @@ class Connection {
                     const userConnections = this.connections.filter((connection) => _.toString(_.get(connection, 'userId')) === userId);
                     //no more socket clients is online with this userId. now user is offline
                     if (userConnections.size === 0) {
-                        this.sendAll({
+                        this.sendToMembers(userId, {
                             action: 'user_offline',
-                            payload: userId
+                            payload: `${userId}`
                         });
                         //update user status into database
-                        this.app.models.user.updateUserStatus(userId, false);
+                        this.app.models.user.updateUserStatus(`${userId}`, false);
                     }
 
 

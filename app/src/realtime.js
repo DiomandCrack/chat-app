@@ -133,7 +133,7 @@ export default class RealTime {
             channel.members = channel.members.set(memberId, true);
         });
         const channelMessages = store.messages.filter((member) => {
-            _.toString(member.channelId = channelId);
+            return _.toString(member.channelId) === channelId;
         });
 
         channelMessages.forEach((msg) => {
@@ -169,7 +169,7 @@ export default class RealTime {
             this.store.update();
 
         }
-        ws.onerror = () => {
+        this.ws.onerror = () => {
             this.isConnected = false;
             this.store.update();
         }
