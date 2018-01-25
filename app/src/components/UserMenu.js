@@ -21,8 +21,11 @@ export default class UserMenu extends Component {
         window.removeEventListener('mousedown',this.onClickOutside)
     }
     render() {
+        const {store} = this.props;
+        const user = store.getCurrentUser();
         return (
-            <div className="user-menu" ref={(menu)=>this.menu=menu}>
+            user?
+                <div className="user-menu" ref={(menu)=>this.menu=menu}>
                 <h3>我的账户</h3>
                 <ul className='menu'>
                     <li>
@@ -41,7 +44,7 @@ export default class UserMenu extends Component {
                         </button>
                     </li>
                 </ul>
-            </div>
+            </div>:null
         )
     }
 }

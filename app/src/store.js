@@ -421,7 +421,14 @@ export default class Store {
 
     signOut() {
         const userId = `${_.get(this.user,'_id',null)}`;
-
+        //request to backend and logout this user
+        const tokenId = _.get(this.token, '_id', null);
+        const options = {
+            headers: {
+                authrization: tokenId,
+            }
+        };
+        this.service.get('api/me/logout', options);
         this.user = null;
         localStorage.removeItem('chatAppMe');
         localStorage.removeItem('token');

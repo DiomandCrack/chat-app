@@ -26,16 +26,19 @@ export default class Messenger extends Component {
         window.removeEventListener('resize',this._onResize.bind(this))
     }
     componentDidUpdate(){
-        console.log('component did update')
+        // console.log('component did update')
         this.scrollMessageToBottom()
 
     }
     _onCreateChannel=()=>{
+        
         const {store} = this.props;
 
         const currentUser = store.getCurrentUser();
         const currentUserId = _.get(currentUser,'_id')
-
+        if(!currentUser){
+            return;
+        }
         const channelId = ObjectID().toString()
         const channel = {
                 _id: channelId,
@@ -129,7 +132,6 @@ export default class Messenger extends Component {
             //new messages added but react won't re-render itself so i should use this.forceUpdate()
            
         }
-        console.log(store);
 
     }
     handleSend=()=>{
@@ -241,14 +243,8 @@ export default class Messenger extends Component {
             <div style={style} className='messenger'>
                 <div className='header'>
                     <div className='left'>
-                    <button className='left-action'>
-                        <i className='icon-cog'/>
-                    </button>
-                    <button className='right-action' onClick={this._onCreateChannel}>
-                        <i className='icon-pencil-square-o'/>
-                    </button>
                         <div className='actions'>
-                            <button>Messenger</button>
+                            <button>聊天室</button>
                         </div>
                     </div>
                     
@@ -257,7 +253,7 @@ export default class Messenger extends Component {
                            <div className="toolbar">
                             <h2>{_.get(activeChannel,'title')}</h2>
                             <div>
-                                <label htmlFor="searchMember">To:</label>
+                                <label htmlFor="searchMember">添加新成员：</label>
                                 {
                                     members.map((user,key)=>(
                                         <span onClick={
@@ -312,7 +308,9 @@ export default class Messenger extends Component {
                         <div className='channels'>
                             {channelsList}
                         </div>
-
+                        <button className='add-channel' onClick={this._onCreateChannel}>
+                            新建一个聊天室
+                        </button>
                     </div>
                     <div className='content'>
                         <div className='messages-list' ref={(ref)=>this.messagesRef = ref}>
@@ -336,7 +334,7 @@ export default class Messenger extends Component {
                                     ></textarea>
                             </div>
                             <div className='actions'>
-                                <button className='send' onClick={this.handleSend}>Send</button>
+                                <button className='send' onClick={this.handleSend}>发送</button>
                             </div>
                         </div>:null}
                         
@@ -344,7 +342,7 @@ export default class Messenger extends Component {
                     <div className='sidebar-right'>
                         {members.size?(
                             <div>
-                                <div className='title'>PEOPLE</div>
+                                <div className='title'>成员</div>
                                 <div className='members'>
                                     {membersList}
                                 </div>

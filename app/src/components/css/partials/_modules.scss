@@ -5,7 +5,7 @@
         line-height: $header-height;
         display: flex;
         height: $header-height;
-        background: $header-background-color;
+        background: $primary-color;
         border-bottom: 2px solid $border-color;
         color: $header-font-color;
         position: relative;
@@ -51,7 +51,8 @@
                     padding: 0 10px;
                     line-height: 30px;
                     border-radius: 8px;
-                    background: $primary-color;
+                    background: #fff;
+                    color: $primary-color;
                     cursor: pointer;
                 }
             }
@@ -113,8 +114,8 @@
                 }
                 button {
                     border: 0;
-                    background: $primary-color;
-                    color: inherit;
+                    background: #fff;
+                    color: $primary-color;
                     padding: 0 20px;
                     line-height: 30px;
                     height: 30px;
@@ -131,8 +132,8 @@
                     right: 0px;
                     padding: 0 25px;
                     background: #fff;
-                    border: 2px solid $danger-color;
-                    border-radius: 8px;
+                    border: 2px solid $primary-color;
+                    border-radius: 4px;
                     .form-item {
                         display: flex;
                         justify-content: space-between;
@@ -148,8 +149,9 @@
                     }
                     button {
                         color: #fff;
-                        padding: 0 10px;
+                        padding: 0 20px;
                         margin: 20px 5px;
+                        background: $primary-color;
                     }
                     p {
                         color: $danger-color;
@@ -283,7 +285,7 @@
 }
 
 .messenger-input {
-    min-height: 50px;
+    min-height: 70px;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -305,6 +307,20 @@
             padding: 0.6rem 1rem;
             height: 100%;
         }
+    }
+}
+
+.sidebar-left {
+    position: relative;
+    .add-channel {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: $primary-color;
+        color: #fff;
+        border: none;
+        outline: none;
+        padding: 0.5rem 0;
     }
 }
 

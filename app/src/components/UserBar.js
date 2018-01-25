@@ -46,7 +46,7 @@ render(){
                 <button 
                     type='button' 
                     className="login-btn"
-                    onClick={(e)=>this.handleShowLoginForm(e,true)}>Sign In</button>
+                    onClick={(e)=>this.handleShowLoginForm(e,true)}>登陆</button>
             )}
             {!me && showLoginForm ?<UserForm store={store} onShowLoginForm={this.handleShowLoginForm}/>:null}
             {me && showMyAccount ?<UserMenu store={store} onShowAccount = {this.handleShowAccount}/>:null}

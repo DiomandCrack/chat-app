@@ -106,7 +106,7 @@ export default class RealTime {
             me: currentUserId === _.toString(_.get(payload, 'userId')),
             user,
         };
-        console.log('messageObject', messageObject);
+        // console.log('messageObject', messageObject);
         store.setMessageToCache(messageObject, notify);
     }
     onAddChannel(payload) {
@@ -150,11 +150,11 @@ export default class RealTime {
         }
     }
     connect() {
-        console.log('begin connection to server');
+        // console.log('begin connection to server');
         const ws = new WebSocket('ws://localhost:3001');
         this.ws = ws
         this.ws.onopen = () => {
-            console.log('You are connection');
+            // console.log('You are connection');
             //tell server who I am；
             this.isConnected = true;
             this.authentication();

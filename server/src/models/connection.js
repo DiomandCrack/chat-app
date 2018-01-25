@@ -24,7 +24,7 @@ class Connection {
                 $lookup: {
                     from: 'users',
                     localField: 'members',
-                    foreginField: '_id',
+                    foreignField: '_id',
                     as: 'users'
                 }
             },

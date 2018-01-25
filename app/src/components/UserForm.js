@@ -63,7 +63,7 @@ export default class UserForm extends Component {
                     })
                 })
 
-            }).catch();
+            }).catch(err=>err);
         }
         })
      
@@ -131,7 +131,7 @@ export default class UserForm extends Component {
                                 isLogin:false,
                             })
                         }
-                        }>Create an account</button>:null}
+                        }>注册新账号</button>:null}
                         <button type='submit'>{isLogin?'登陆':'注册'}</button>
                     </div>
                 </form>

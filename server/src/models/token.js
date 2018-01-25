@@ -8,6 +8,19 @@ class Token {
 
         this.tokens = new OrderedMap();
     }
+    logout(token) {
+        return new Promise((resolve, reject) => {
+            const tokenId = _.toString(token._id);
+            //to remove token from cache
+            this.tokens = this.tokens.remove(tokenId);
+            //delete this token id from tokens collection
+            this.app.db.collection('tokens').remove({ _id: new Object(tokenId) }, (err, token) => {
+                //console.log(err, log);
+                return err ? reject(err) : resolve(token);
+            });
+        });
+
+    }
     loadTokenAndUser(tokenId) {
         return new Promise((resolve, reject) => {
             this.load(tokenId).then((token) => {

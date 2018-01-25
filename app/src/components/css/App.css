@@ -260,7 +260,7 @@ html {
     line-height: 50px;
     display: flex;
     height: 50px;
-    background: linear-gradient(to right, blueviolet, #FF3D00);
+    background: #03A9F4;
     border-bottom: 2px solid rgba(0, 0, 0, 0.05);
     color: #E1F5FE;
     position: relative; }
@@ -300,7 +300,8 @@ html {
           padding: 0 10px;
           line-height: 30px;
           border-radius: 8px;
-          background: #03A9F4;
+          background: #fff;
+          color: #03A9F4;
           cursor: pointer; }
       .messenger .header .content h2 {
         margin: 0;
@@ -348,8 +349,8 @@ html {
             height: 100%; }
         .messenger .header .right .user-bar button {
           border: 0;
-          background: #03A9F4;
-          color: inherit;
+          background: #fff;
+          color: #03A9F4;
           padding: 0 20px;
           line-height: 30px;
           height: 30px;
@@ -365,8 +366,8 @@ html {
           right: 0px;
           padding: 0 25px;
           background: #fff;
-          border: 2px solid #FF3D00;
-          border-radius: 8px; }
+          border: 2px solid #03A9F4;
+          border-radius: 4px; }
           .messenger .header .right .user-bar .user-form .form-item {
             display: flex;
             justify-content: space-between;
@@ -379,8 +380,9 @@ html {
             justify-content: center; }
           .messenger .header .right .user-bar .user-form button {
             color: #fff;
-            padding: 0 10px;
-            margin: 20px 5px; }
+            padding: 0 20px;
+            margin: 20px 5px;
+            background: #03A9F4; }
           .messenger .header .right .user-bar .user-form p {
             color: #FF3D00; }
           .messenger .header .right .user-bar .user-form .space {
@@ -480,7 +482,7 @@ html {
         margin: 0; }
 
 .messenger-input {
-  min-height: 50px;
+  min-height: 70px;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap; }
@@ -498,6 +500,18 @@ html {
     border: none;
     padding: 0.6rem 1rem;
     height: 100%; }
+
+.sidebar-left {
+  position: relative; }
+  .sidebar-left .add-channel {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: #03A9F4;
+    color: #fff;
+    border: none;
+    outline: none;
+    padding: 0.5rem 0; }
 
 .channels {
   overflow-y: auto;
