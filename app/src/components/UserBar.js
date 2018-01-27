@@ -10,7 +10,7 @@ state={
     showMyAccount:false,
 }
 handleShowLoginForm=(e,isShown)=>{
-    console.log('login form',e.target)
+    // console.log('login form',e.target)
     this.setState({
         showLoginForm:isShown
     })

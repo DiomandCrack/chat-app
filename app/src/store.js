@@ -138,10 +138,10 @@ export default class Store {
     }
 
     onCreateNewChannel(channel = {}) {
-        console.log(channel);
+        // console.log(channel);
         const channelId = _.get(channel, '_id')
         this.addChannel(channelId, channel)
-        console.log(JSON.stringify(this.channels.toJS()))
+            // console.log(JSON.stringify(this.channels.toJS()))
     }
 
     setActiveChannelId(id) {
@@ -239,7 +239,7 @@ export default class Store {
                 payload: message,
             });
 
-            console.log('Channel', channel);
+            // console.log('Channel', channel);
 
             channel.messages = channel.messages.set(id, true);
 
@@ -363,10 +363,10 @@ export default class Store {
 
 
         const user = {
-            email: userEmail,
-            password,
-        }
-        console.log("Trying to login with user info", user);
+                email: userEmail,
+                password,
+            }
+            // console.log("Trying to login with user info", user);
         return new Promise((resolve, reject) => {
             //call backend service and login with user data
             this.service.post('api/users/login', user).then((res) => {
@@ -384,8 +384,8 @@ export default class Store {
                 this.fetchUserChannels();
 
             }).catch((err) => {
-                console.log("Got an error login from server", err)
-                    //err.response.data.err.message
+                // console.log("Got an error login from server", err)
+                //err.response.data.err.message
                 const message = _.get(err, 'response.data.err.message', 'Login error')
                 return reject(message)
             })

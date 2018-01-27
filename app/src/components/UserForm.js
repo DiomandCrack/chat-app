@@ -67,7 +67,7 @@ export default class UserForm extends Component {
         }
         })
      
-        console.log('submitted user',user)
+        // console.log('submitted user',user)
     }
 
     onTextChange=(e)=>{

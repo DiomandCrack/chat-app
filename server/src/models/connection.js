@@ -77,7 +77,7 @@ class Connection {
                         messageObject.userId = _.get(userConnection, 'userId');
                         this.app.models.message.create(messageObject).then((message) => {
                             //message created successfully
-                            console.log('Message Created', message);
+                            // console.log('Message Created', message);
                             const channelId = _.toString(_.get(message, 'channelId'));
                             this.app.models.channel.load(channelId).then((channel) => {
                                 // console.log('got chnanel of the message created', channel);
@@ -112,7 +112,7 @@ class Connection {
                 }
             case 'create_channel':
                 {
-                    console.log('channel created from client', channel);
+                    // console.log('channel created from client', channel);
                     const channel = payload;
                     const connection = this.connections.get(socketId);
                     const userId = connection.userId;
@@ -121,7 +121,7 @@ class Connection {
 
                     this.app.models.channel.create(channel).then((channelObject) => {
                         //successful created channel
-                        console.log('successful create new channel', channelObject);
+                        // console.log('successful create new channel', channelObject);
                         //send backend to all members in this channel with new channel created
                         let memberConnections = [];
                         const memberIds = _.get(channelObject, 'members', []);
@@ -202,7 +202,7 @@ class Connection {
 
                     }
 
-                    console.log("user with token ID is:", userTokenId, typeof userTokenId);
+                    // console.log("user with token ID is:", userTokenId, typeof userTokenId);
                     break;
 
                 }

@@ -69,7 +69,7 @@ class Message {
                 }
             ];
             this.app.db.collection('messages').aggregate(query, (err, messages) => {
-                console.log(err);
+                // console.log(err);
                 return err ? reject(err) : resolve(messages);
             });
         });

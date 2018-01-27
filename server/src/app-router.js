@@ -17,9 +17,9 @@ class AppRouter {
         @endpoint:/
         @method:GET
         */
-        app.get('/', (req, res, next) => {
-            return res.json({ time: moment(START_TIME).fromNow() })
-        });
+        // app.get('/', (req, res, next) => {
+        //     return res.json({ time: moment(START_TIME).fromNow() })
+        // });
         /*
         @endpoint: /
         @method: POST

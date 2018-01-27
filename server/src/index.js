@@ -28,6 +28,8 @@ app.use(bodyParser.json({
 app.wss = new Server({
     server: app.server
 });
+const wwwPath = path.join(__dirname, 'www');
+app.use('/', express.static(wwwPath));
 // Connect to Mongo Database
 //promise
 new Database().connect().then((db) => {

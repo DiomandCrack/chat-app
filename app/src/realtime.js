@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import { OrderedMap } from 'immutable';
+import { WebSocketUrl } from './config';
 
 export default class RealTime {
     constructor(store) {
@@ -151,7 +152,7 @@ export default class RealTime {
     }
     connect() {
         // console.log('begin connection to server');
-        const ws = new WebSocket('ws://localhost:3001');
+        const ws = new WebSocket(WebSocketUrl);
         this.ws = ws
         this.ws.onopen = () => {
             // console.log('You are connection');
@@ -159,8 +160,8 @@ export default class RealTime {
             this.isConnected = true;
             this.authentication();
             ws.onmessage = (e) => {
-                this.readMessage(_.get(e, 'data', {}));
-                console.log("message from server", e.data);
+                this.readMessage(_.get(e, 'data'));
+                //console.log("message from server", e.data);
             }
         }
         this.ws.onclose = () => {

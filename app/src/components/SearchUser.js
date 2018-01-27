@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 export default class SearchUser extends Component {
     handleOnClick(user){
-        console.log(user.name)
+        // console.log(user.name)
         if(this.props.onSelect){
             this.props.onSelect(user)
         }

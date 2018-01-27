@@ -1,5 +1,6 @@
-import axios from 'axios'
-const apiURL = 'http://localhost:3001';
+import axios from 'axios';
+import { apiUrl } from './config'
+const apiURL = apiUrl;
 export default class Service {
     get(endpoint, options = null) {
         const url = `${apiURL}/${endpoint}`;

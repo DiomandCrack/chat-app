@@ -32,7 +32,7 @@ class Channel {
         });
     }
     find(q, options = {}) {
-        console.log(q)
+        // console.log(q)
         return new Promise((resolve, reject) => {
             this.app.db.collection('channels').find(q, options).toArray((err, channel) => {
                 return err ? reject(err) : resolve(channel);
@@ -58,7 +58,7 @@ class Channel {
             let objectId = id ? new ObjectID(id) : new ObjectID;
             let members = [];
             _.each(_.get(obj, 'members', []), (value, key) => {
-                console.log('key', key, value);
+                // console.log('key', key, value);
                 const memberObjectId = new ObjectID(key);
                 members.push(memberObjectId);
             });
@@ -70,7 +70,7 @@ class Channel {
                 userId: _.get(obj, 'userId'),
                 members: members,
             };
-            console.log('channel:', channel);
+            // console.log('channel:', channel);
             this.app.db.collection('channels').insertOne(channel, (err, info) => {
                 if (!err) {
                     const channelId = channel._id.toString();
