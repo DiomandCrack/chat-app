@@ -30,6 +30,7 @@ npm i
 - 方案一
 
     安装[windows-build-tools](https://github.com/felixrieseberg/windows-build-tools)
+    
     powershell管理员权限下运行`npm install --global --production windows-build-tools`
 
 - 方案二
