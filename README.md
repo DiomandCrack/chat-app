@@ -16,13 +16,13 @@ cd server
 npm i
 ```
 
-安装mongoDB[mongoDB](https://www.mongodb.com/download-center?jmp=nav#atlas)
+安装mongoDB:[mongoDB](https://www.mongodb.com/download-center?jmp=nav#atlas)
 
 可以使用mongoDB可视化工具:[robo3T](https://robomongo.org)
 
 **由于安装了bcrypt 用于密码加密 依赖`node-gyp` 安装前需要配置环境 否则将会报错 依赖无法安装成功**
 
-## window下安装`node-gyp`
+### window下安装`node-gyp`
 
 安装`node-gyp`:
 参考[node.js/node-gyp](https://github.com/nodejs/node-gyp)
@@ -55,7 +55,7 @@ app:
 yarn start
 ```
 
-server
+server:
 端口号:3001
 
 ```shell
